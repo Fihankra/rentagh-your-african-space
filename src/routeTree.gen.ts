@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as BrowseRouteImport } from './routes/browse'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PropertyIdRouteImport } from './routes/property.$id'
 import { Route as BrowseCategoryRouteImport } from './routes/browse.$category'
@@ -17,6 +18,11 @@ import { Route as BrowseCategoryRouteImport } from './routes/browse.$category'
 const BrowseRoute = BrowseRouteImport.update({
   id: '/browse',
   path: '/browse',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,12 +43,14 @@ const BrowseCategoryRoute = BrowseCategoryRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/browse': typeof BrowseRouteWithChildren
   '/browse/$category': typeof BrowseCategoryRoute
   '/property/$id': typeof PropertyIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/browse': typeof BrowseRouteWithChildren
   '/browse/$category': typeof BrowseCategoryRoute
   '/property/$id': typeof PropertyIdRoute
@@ -50,20 +58,28 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/browse': typeof BrowseRouteWithChildren
   '/browse/$category': typeof BrowseCategoryRoute
   '/property/$id': typeof PropertyIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/browse' | '/browse/$category' | '/property/$id'
+  fullPaths: '/' | '/about' | '/browse' | '/browse/$category' | '/property/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/browse' | '/browse/$category' | '/property/$id'
-  id: '__root__' | '/' | '/browse' | '/browse/$category' | '/property/$id'
+  to: '/' | '/about' | '/browse' | '/browse/$category' | '/property/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/browse'
+    | '/browse/$category'
+    | '/property/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   BrowseRoute: typeof BrowseRouteWithChildren
   PropertyIdRoute: typeof PropertyIdRoute
 }
@@ -75,6 +91,13 @@ declare module '@tanstack/react-router' {
       path: '/browse'
       fullPath: '/browse'
       preLoaderRoute: typeof BrowseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -114,9 +137,20 @@ const BrowseRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   BrowseRoute: BrowseRouteWithChildren,
   PropertyIdRoute: PropertyIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
