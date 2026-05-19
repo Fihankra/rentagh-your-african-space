@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as BrowseRouteImport } from './routes/browse'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BrowseCategoryRouteImport } from './routes/browse.$category'
 
 const BrowseRoute = BrowseRouteImport.update({
   id: '/browse',
@@ -22,31 +23,39 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrowseCategoryRoute = BrowseCategoryRouteImport.update({
+  id: '/$category',
+  path: '/$category',
+  getParentRoute: () => BrowseRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/browse': typeof BrowseRoute
+  '/browse': typeof BrowseRouteWithChildren
+  '/browse/$category': typeof BrowseCategoryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/browse': typeof BrowseRoute
+  '/browse': typeof BrowseRouteWithChildren
+  '/browse/$category': typeof BrowseCategoryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/browse': typeof BrowseRoute
+  '/browse': typeof BrowseRouteWithChildren
+  '/browse/$category': typeof BrowseCategoryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/browse'
+  fullPaths: '/' | '/browse' | '/browse/$category'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/browse'
-  id: '__root__' | '/' | '/browse'
+  to: '/' | '/browse' | '/browse/$category'
+  id: '__root__' | '/' | '/browse' | '/browse/$category'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BrowseRoute: typeof BrowseRoute
+  BrowseRoute: typeof BrowseRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +74,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/browse/$category': {
+      id: '/browse/$category'
+      path: '/$category'
+      fullPath: '/browse/$category'
+      preLoaderRoute: typeof BrowseCategoryRouteImport
+      parentRoute: typeof BrowseRoute
+    }
   }
 }
 
+interface BrowseRouteChildren {
+  BrowseCategoryRoute: typeof BrowseCategoryRoute
+}
+
+const BrowseRouteChildren: BrowseRouteChildren = {
+  BrowseCategoryRoute: BrowseCategoryRoute,
+}
+
+const BrowseRouteWithChildren =
+  BrowseRoute._addFileChildren(BrowseRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BrowseRoute: BrowseRoute,
+  BrowseRoute: BrowseRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
