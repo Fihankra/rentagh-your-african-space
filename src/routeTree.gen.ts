@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BrowseRouteImport } from './routes/browse'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PropertyIdRouteImport } from './routes/property.$id'
 import { Route as BrowseCategoryRouteImport } from './routes/browse.$category'
 
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrowseRoute = BrowseRouteImport.update({
   id: '/browse',
   path: '/browse',
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/browse': typeof BrowseRouteWithChildren
+  '/contact': typeof ContactRoute
   '/browse/$category': typeof BrowseCategoryRoute
   '/property/$id': typeof PropertyIdRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/browse': typeof BrowseRouteWithChildren
+  '/contact': typeof ContactRoute
   '/browse/$category': typeof BrowseCategoryRoute
   '/property/$id': typeof PropertyIdRoute
 }
@@ -60,19 +68,33 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/browse': typeof BrowseRouteWithChildren
+  '/contact': typeof ContactRoute
   '/browse/$category': typeof BrowseCategoryRoute
   '/property/$id': typeof PropertyIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/browse' | '/browse/$category' | '/property/$id'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/browse'
+    | '/contact'
+    | '/browse/$category'
+    | '/property/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/browse' | '/browse/$category' | '/property/$id'
+  to:
+    | '/'
+    | '/about'
+    | '/browse'
+    | '/contact'
+    | '/browse/$category'
+    | '/property/$id'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/browse'
+    | '/contact'
     | '/browse/$category'
     | '/property/$id'
   fileRoutesById: FileRoutesById
@@ -81,11 +103,19 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   BrowseRoute: typeof BrowseRouteWithChildren
+  ContactRoute: typeof ContactRoute
   PropertyIdRoute: typeof PropertyIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/browse': {
       id: '/browse'
       path: '/browse'
@@ -139,6 +169,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   BrowseRoute: BrowseRouteWithChildren,
+  ContactRoute: ContactRoute,
   PropertyIdRoute: PropertyIdRoute,
 }
 export const routeTree = rootRouteImport
