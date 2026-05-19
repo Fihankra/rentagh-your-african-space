@@ -1,0 +1,113 @@
+import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
+import logo from "@/assets/logo.png";
+import { cn } from "@/lib/utils";
+
+const nav = [
+  { to: "/browse", label: "Browse" },
+  { to: "/browse/hotels", label: "Hotels & Stays" },
+  { to: "/browse/hostels", label: "Hostels" },
+  { to: "/browse/lands", label: "Lands" },
+  { to: "/about", label: "About" },
+];
+
+export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const solid = !overlay || scrolled;
+
+  return (
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        solid
+          ? "bg-background/85 backdrop-blur-md border-b hairline shadow-[0_1px_0_0_color-mix(in_oklab,var(--charcoal)_6%,transparent)]"
+          : "bg-transparent"
+      )}
+    >
+      <div className="container-x flex h-16 items-center justify-between gap-6 md:h-20">
+        <Link to="/" className="flex items-center gap-2.5">
+          <img src={logo} alt="RentaGh" className="h-9 w-auto md:h-10" />
+        </Link>
+
+        <nav className="hidden items-center gap-8 md:flex">
+          {nav.map((n) => (
+            <Link
+              key={n.to}
+              to={n.to}
+              className={cn(
+                "text-sm font-medium transition-colors",
+                solid ? "text-foreground/75 hover:text-primary" : "text-white/85 hover:text-white"
+              )}
+              activeProps={{ className: solid ? "text-primary" : "text-white" }}
+            >
+              {n.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="hidden items-center gap-3 md:flex">
+          <Link
+            to="/contact"
+            className={cn(
+              "text-sm font-medium transition-colors",
+              solid ? "text-foreground/75 hover:text-primary" : "text-white/85 hover:text-white"
+            )}
+          >
+            List your property
+          </Link>
+          <Link
+            to="/browse"
+            className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-[0_8px_24px_-12px_color-mix(in_oklab,var(--primary)_60%,transparent)] transition-transform hover:-translate-y-0.5"
+          >
+            Explore
+          </Link>
+        </div>
+
+        <button
+          aria-label="Menu"
+          onClick={() => setOpen((s) => !s)}
+          className={cn(
+            "md:hidden rounded-full p-2 transition-colors",
+            solid ? "text-foreground" : "text-white"
+          )}
+        >
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+      </div>
+
+      {open && (
+        <div className="md:hidden border-t hairline bg-background">
+          <div className="container-x flex flex-col gap-1 py-4">
+            {nav.map((n) => (
+              <Link
+                key={n.to}
+                to={n.to}
+                onClick={() => setOpen(false)}
+                className="rounded-lg px-3 py-3 text-sm font-medium text-foreground/80 hover:bg-muted"
+              >
+                {n.label}
+              </Link>
+            ))}
+            <Link
+              to="/browse"
+              onClick={() => setOpen(false)}
+              className="mt-2 rounded-full bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground"
+            >
+              Explore listings
+            </Link>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}

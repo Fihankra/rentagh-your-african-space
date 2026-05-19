@@ -1,0 +1,96 @@
+import { Link } from "@tanstack/react-router";
+import { Facebook, Instagram, Twitter, Youtube, Globe } from "lucide-react";
+import logo from "@/assets/logo.png";
+
+const cols = [
+  {
+    heading: "Discover",
+    links: [
+      { to: "/browse/homes", label: "Homes" },
+      { to: "/browse/apartments", label: "Apartments" },
+      { to: "/browse/houses-for-sale", label: "Houses for sale" },
+      { to: "/browse/vacation", label: "Vacation" },
+    ],
+  },
+  {
+    heading: "Spaces",
+    links: [
+      { to: "/browse/hotels", label: "Hotels & Stays" },
+      { to: "/browse/hostels", label: "Student hostels" },
+      { to: "/browse/commercial", label: "Commercial" },
+      { to: "/browse/lands", label: "Lands & Farmlands" },
+    ],
+  },
+  {
+    heading: "Company",
+    links: [
+      { to: "/about", label: "About RentaGh" },
+      { to: "/contact", label: "List a property" },
+      { to: "/contact", label: "Partner with us" },
+      { to: "/contact", label: "Contact" },
+    ],
+  },
+];
+
+export function SiteFooter() {
+  return (
+    <footer className="mt-24 border-t hairline bg-[color:var(--charcoal)] text-[color:var(--cream)]">
+      <div className="container-x py-16">
+        <div className="grid gap-12 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+          <div>
+            <div className="flex items-center gap-2">
+              <img src={logo} alt="RentaGh" className="h-10 w-auto brightness-0 invert" />
+            </div>
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/65">
+              Every Space. One Platform. RentaGh is Africa's premium home for renting, buying and listing property — built in Ghana for the continent.
+            </p>
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="mt-6 flex max-w-sm overflow-hidden rounded-full border border-white/15 bg-white/5 backdrop-blur"
+            >
+              <input
+                type="email"
+                placeholder="Your email"
+                className="flex-1 bg-transparent px-5 py-3 text-sm text-white placeholder:text-white/45 focus:outline-none"
+              />
+              <button className="bg-[color:var(--accent)] px-5 py-3 text-sm font-semibold text-[color:var(--charcoal)]">
+                Notify me
+              </button>
+            </form>
+          </div>
+
+          {cols.map((col) => (
+            <div key={col.heading}>
+              <div className="font-display text-sm uppercase tracking-[0.2em] text-[color:var(--accent)]">
+                {col.heading}
+              </div>
+              <ul className="mt-5 space-y-3">
+                {col.links.map((l) => (
+                  <li key={l.label}>
+                    <Link to={l.to} className="text-sm text-white/75 transition-colors hover:text-white">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-sm text-white/55 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center gap-2">
+            <Globe className="h-4 w-4" />
+            www.rentagh.com · Accra, Ghana
+          </div>
+          <div>© {new Date().getFullYear()} RentaGh. Every Space. One Platform.</div>
+          <div className="flex items-center gap-4">
+            <Instagram className="h-4 w-4" />
+            <Twitter className="h-4 w-4" />
+            <Facebook className="h-4 w-4" />
+            <Youtube className="h-4 w-4" />
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
