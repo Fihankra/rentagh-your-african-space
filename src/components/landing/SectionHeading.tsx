@@ -17,8 +17,11 @@ export function SectionHeading({
         {subtitle && <p className="mt-3 text-base text-muted-foreground md:text-lg">{subtitle}</p>}
       </div>
       {link && (
-        // @ts-expect-error allow generic to + optional params
-        <Link to={link.to} params={link.params} className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:gap-3 transition-all">
+        <Link
+          to={link.to as string}
+          params={link.params as never}
+          className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:gap-3 transition-all"
+        >
           {link.label} <ArrowUpRight className="h-4 w-4" />
         </Link>
       )}
