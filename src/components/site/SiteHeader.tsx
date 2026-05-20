@@ -35,8 +35,14 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
       )}
     >
       <div className="container-x flex h-16 items-center justify-between gap-6 md:h-20">
-        <Link to="/" className="flex items-center gap-2.5">
-          <img src={logo} alt="RentaGh" className="h-9 w-auto md:h-10" />
+        <Link
+          to="/"
+          className={cn(
+            "flex items-center gap-2.5 rounded-full transition-colors",
+            solid ? "" : "bg-white/95 px-2.5 py-1 shadow-[0_4px_18px_-8px_rgba(0,0,0,0.35)]"
+          )}
+        >
+          <img src={logo} alt="RentaGh" className="h-8 w-auto md:h-10" />
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
