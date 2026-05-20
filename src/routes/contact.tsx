@@ -26,7 +26,6 @@ function ContactPage() {
       <main className="container-x pt-32 pb-16">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr]">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Get in touch</div>
             <h1 className="mt-3 font-display text-5xl font-semibold text-foreground md:text-6xl">
               Let's build your <span className="italic text-[color:var(--accent)]">next move</span>.
             </h1>

@@ -8,9 +8,6 @@ export function AppPromo() {
         <div className="overflow-hidden rounded-[36px] bg-[color:var(--charcoal)] text-white">
           <div className="grid md:grid-cols-2">
             <div className="p-10 md:p-14">
-              <div className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--accent)]">
-                Coming soon · iOS & Android
-              </div>
               <h2 className="mt-4 font-display text-4xl font-semibold text-balance md:text-5xl">
                 RentaGh in your pocket. <span className="italic text-[color:var(--accent)]">Always.</span>
               </h2>
