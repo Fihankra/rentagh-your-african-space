@@ -12,13 +12,13 @@ export type CategorySlug =
   | "vacation";
 
 export const categories: { slug: CategorySlug; label: string; tagline: string; icon: typeof Home }[] = [
+  { slug: "hostels", label: "Student Hostels", tagline: "Campus stays", icon: GraduationCap },
   { slug: "homes", label: "Homes", tagline: "Rent a home", icon: Home },
+  { slug: "lands", label: "Lands", tagline: "Own land", icon: MapPin },
   { slug: "apartments", label: "Apartments", tagline: "Modern living", icon: Building2 },
   { slug: "houses-for-sale", label: "Houses for Sale", tagline: "Buy your home", icon: KeyRound },
-  { slug: "lands", label: "Lands", tagline: "Own land", icon: MapPin },
   { slug: "farmlands", label: "Farmlands", tagline: "Hire or buy", icon: Sprout },
   { slug: "commercial", label: "Commercial", tagline: "Offices & shops", icon: Briefcase },
-  { slug: "hostels", label: "Student Hostels", tagline: "Campus stays", icon: GraduationCap },
   { slug: "hotels", label: "Hotels & Stays", tagline: "Short trips", icon: BedDouble },
   { slug: "vacation", label: "Vacation", tagline: "Holiday escapes", icon: Palmtree },
 ];

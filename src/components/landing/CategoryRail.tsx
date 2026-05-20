@@ -35,7 +35,7 @@ export function MobileCategoryRail() {
               key={slug}
               to="/browse/$category"
               params={{ category: slug }}
-              className="flex shrink-0 flex-col items-center gap-2 rounded-2xl border hairline bg-card px-4 py-3"
+              className="flex w-[104px] shrink-0 flex-col items-center gap-2 rounded-2xl border hairline bg-card px-3 py-3 text-center"
             >
               <Icon className="h-5 w-5 text-primary" />
               <span className="text-xs font-medium text-foreground/80">{label}</span>
