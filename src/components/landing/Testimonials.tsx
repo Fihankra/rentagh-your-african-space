@@ -10,7 +10,7 @@ const t = [
 export function Testimonials() {
   return (
     <section className="mt-24">
-      <SectionHeading eyebrow="Voices" title="Loved across the country" subtitle="Real Ghanaians, real moves, real keys." />
+      <SectionHeading title="Loved across the country" subtitle="Real Ghanaians, real moves, real keys." />
       <div className="container-x mt-10 grid gap-6 md:grid-cols-3">
         {t.map((x) => (
           <div key={x.name} className="rounded-3xl border hairline bg-card p-7">

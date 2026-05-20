@@ -16,7 +16,6 @@ export function RegionGrid() {
   return (
     <section className="mt-24">
       <SectionHeading
-        eyebrow="Across Ghana"
         title="Featured regions"
         subtitle="From Accra's coast to the hills of the Ashanti — every region, one platform."
       />

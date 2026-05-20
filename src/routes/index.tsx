@@ -36,26 +36,22 @@ function Index() {
         <FeaturedRail />
         <CategorySpotlight
           category="vacation"
-          eyebrow="Short escapes"
           title="Vacation stays along the coast"
           subtitle="Beachfront villas and palm-shaded retreats from Elmina to Ada."
         />
         <RegionGrid />
         <CategorySpotlight
           category="hostels"
-          eyebrow="For students"
           title="Hostels near every campus"
           subtitle="Safe, verified accommodation walking distance from KNUST, UG, UCC and more."
         />
         <CategorySpotlight
           category="hotels"
-          eyebrow="Hotels & stays"
           title="Premium nights, Ghanaian warmth"
           subtitle="Boutique hotels and serviced apartments in Ghana's most beautiful corners."
         />
         <CategorySpotlight
           category="farmlands"
-          eyebrow="Working the land"
           title="Farmlands to hire & own"
           subtitle="Productive cocoa, palm and arable plots — fully documented and ready."
         />
