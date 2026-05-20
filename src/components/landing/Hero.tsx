@@ -8,17 +8,12 @@ export function Hero() {
       <img
         src={hero}
         alt="Luxury villa at golden hour in Accra"
-        className="absolute inset-0 h-full w-full object-cover opacity-90"
+        className="absolute inset-0 h-full w-full object-cover opacity-95"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/30 to-black/85" />
-      <div className="absolute inset-x-0 top-0 h-[40%] bg-gradient-to-b from-black/55 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
       <div className="container-x relative flex min-h-[92vh] flex-col justify-end pb-12 pt-32 md:pb-20 md:pt-40">
         <div className="max-w-3xl">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs uppercase tracking-[0.22em] backdrop-blur">
-            <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)]" />
-            Every Space. One Platform.
-          </div>
           <h1 className="font-display text-balance text-5xl font-semibold leading-[1.02] md:text-7xl">
             Find your next address <span className="italic text-[color:var(--accent)]">in Ghana</span>.
           </h1>
@@ -46,14 +41,6 @@ export function Hero() {
             </Link>
           </form>
         </div>
-
-        <div className="mt-10 flex flex-wrap items-center gap-x-10 gap-y-4 text-sm text-white/70">
-          <Stat n="12,400+" label="Verified listings" />
-          <span className="h-4 w-px bg-white/20" />
-          <Stat n="92" label="Towns & cities" />
-          <span className="h-4 w-px bg-white/20" />
-          <Stat n="48,000" label="Trusted users" />
-        </div>
       </div>
     </section>
   );
@@ -73,14 +60,5 @@ function Field({
         />
       </div>
     </label>
-  );
-}
-
-function Stat({ n, label }: { n: string; label: string }) {
-  return (
-    <div>
-      <div className="font-display text-2xl font-semibold text-white">{n}</div>
-      <div className="text-xs uppercase tracking-[0.18em] text-white/55">{label}</div>
-    </div>
   );
 }

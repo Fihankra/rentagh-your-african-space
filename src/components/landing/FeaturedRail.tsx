@@ -7,7 +7,6 @@ export function FeaturedRail() {
   return (
     <section className="mt-24">
       <SectionHeading
-        eyebrow="Editor's pick"
         title="Featured this week"
         subtitle="Hand-selected by our team — verified, beautifully shot, and ready to move on."
         link={{ to: "/browse", label: "View all listings" }}
