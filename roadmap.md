@@ -78,3 +78,10 @@ Brand: Deep Emerald #014421, Gold #D4A437, Cream #F8F6F1. Mobile-first African l
 - Enquiry threads: `enquiry_replies` table, owner reply box with confirmation template, status filters (all/new/read/replied) in the dashboard inbox.
 - Browse: pagination (9 per page) on top of category/region/search/rent-sale/price/sort filters.
 - Admin: no real admin yet — first signed-up user must claim it from the dashboard ("Become the administrator"), then can promote others.
+
+## Update — administrator, moderation, notifications
+- Administrator account created: rentaghana@gmail.com (email confirmed, admin role granted). "Become the administrator" flow stays available if the role is ever cleared.
+- Role-based access: /admin gated client-side and every admin server action re-checks the admin role server-side.
+- Moderation tabs in /admin: Listings (publish/unpublish, feature, delete), Enquiries (view/delete), Reviews (view/remove).
+- Notifications: bell in the header with unread enquiry count (refreshes every minute) plus folder counts in the owner inbox.
+- Outstanding: enable leaked-password protection in Supabase Auth settings (dashboard toggle).

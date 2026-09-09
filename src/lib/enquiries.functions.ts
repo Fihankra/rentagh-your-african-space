@@ -105,3 +105,31 @@ export const updateEnquiryStatus = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+/**
+ * Owner inbox notifications: how many enquiries are still unanswered,
+ * plus the newest few for the notification menu.
+ */
+export const getEnquiryNotifications = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("enquiries")
+      .select("id, name, status, created_at, properties(title)")
+      .order("created_at", { ascending: false })
+      .limit(50);
+    if (error) throw new Error(error.message);
+
+    const rows = data ?? [];
+    return {
+      unread: rows.filter((e: any) => e.status === "new").length,
+      unanswered: rows.filter((e: any) => e.status !== "replied").length,
+      latest: rows.slice(0, 6).map((e: any) => ({
+        id: e.id as string,
+        name: e.name as string,
+        status: e.status as string,
+        createdAt: e.created_at as string,
+        propertyTitle: (e.properties?.title as string) ?? "Listing",
+      })),
+    };
+  });

@@ -4,6 +4,7 @@ import { Menu, X, User, LogOut, LayoutDashboard, Shield } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
+import { NotificationBell } from "@/components/site/NotificationBell";
 
 const nav: { to: string; params?: Record<string, string>; label: string }[] = [
   { to: "/browse/$category", params: { category: "homes" }, label: "Houses" },
@@ -69,6 +70,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
         <div className="hidden items-center gap-3 md:flex">
           {user ? (
             <div className="flex items-center gap-3">
+              <NotificationBell solid={solid} />
               <Link
                 to="/dashboard"
                 className={cn(

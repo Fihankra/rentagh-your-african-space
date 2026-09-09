@@ -1,11 +1,18 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Shield, Users, LayoutGrid, AlertCircle } from "lucide-react";
+import { Shield, Users, LayoutGrid, AlertCircle, Trash2, Star, Mail } from "lucide-react";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { adminListUsers, adminSetUserRole, adminStats } from "@/lib/admin.functions";
 import { adminListProperties, adminUpdatePropertyStatus, updateCategoryMetadata, claimFirstAdmin, listCategoryMetadata } from "@/lib/properties.functions";
+import {
+  adminListEnquiries,
+  adminDeleteEnquiry,
+  adminListReviews,
+  adminDeleteReview,
+  adminDeleteProperty,
+} from "@/lib/moderation.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
@@ -34,13 +41,35 @@ export const Route = createFileRoute("/_authenticated/admin")({
 });
 
 function AdminPage() {
-  const [tab, setTab] = useState<"overview" | "categories" | "listings" | "users">("overview");
+  const [tab, setTab] = useState<
+    "overview" | "categories" | "listings" | "enquiries" | "reviews" | "users"
+  >("overview");
   const qc = useQueryClient();
 
   const { data: stats } = useQuery({ queryKey: ["admin-stats"], queryFn: () => adminStats() });
   const { data: users } = useQuery({ queryKey: ["admin-users"], queryFn: () => adminListUsers(), enabled: tab === "users" });
   const { data: properties } = useQuery({ queryKey: ["admin-properties"], queryFn: () => adminListProperties(), enabled: tab === "listings" });
   const { data: categoryMeta } = useQuery({ queryKey: ["category-metadata"], queryFn: () => listCategoryMetadata() });
+  const { data: allEnquiries } = useQuery({ queryKey: ["admin-enquiries"], queryFn: () => adminListEnquiries(), enabled: tab === "enquiries" });
+  const { data: allReviews } = useQuery({ queryKey: ["admin-reviews"], queryFn: () => adminListReviews(), enabled: tab === "reviews" });
+
+  const removeEnquiry = useMutation({
+    mutationFn: (id: string) => adminDeleteEnquiry({ data: { id } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-enquiries"] }),
+  });
+
+  const removeReview = useMutation({
+    mutationFn: (id: string) => adminDeleteReview({ data: { id } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-reviews"] }),
+  });
+
+  const removeProperty = useMutation({
+    mutationFn: (id: string) => adminDeleteProperty({ data: { id } }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin-properties"] });
+      qc.invalidateQueries({ queryKey: ["admin-stats"] });
+    },
+  });
 
   const setRole = useMutation({
     mutationFn: adminSetUserRole,
@@ -69,7 +98,7 @@ function AdminPage() {
         <h1 className="font-display text-3xl font-semibold text-foreground md:text-4xl">Admin dashboard</h1>
 
         <div className="mt-6 flex flex-wrap gap-2">
-          {["overview", "categories", "listings", "users"].map((t) => (
+          {["overview", "categories", "listings", "enquiries", "reviews", "users"].map((t) => (
             <button
               key={t}
               onClick={() => setTab(t as typeof tab)}
@@ -153,9 +182,91 @@ function AdminPage() {
                   <Link to="/property/$id" params={{ id: p.id }} className="text-sm font-medium text-primary">
                     View
                   </Link>
+                  <button
+                    onClick={() => {
+                      if (confirm(`Delete "${p.title}" permanently? This cannot be undone.`)) removeProperty.mutate(p.id);
+                    }}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" /> Delete
+                  </button>
                 </div>
               </div>
             ))}
+          </section>
+        )}
+
+        {tab === "enquiries" && (
+          <section className="mt-10 space-y-3">
+            {!allEnquiries?.length ? (
+              <p className="text-muted-foreground">No enquiries have been sent yet.</p>
+            ) : (
+              allEnquiries.map((e) => (
+                <div key={e.id} className="rounded-[20px] border hairline bg-card p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <p className="font-medium text-foreground">{e.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {e.propertyTitle} · {new Date(e.createdAt).toLocaleDateString()} ·{" "}
+                        {e.status === "new" ? "New" : e.status === "read" ? "Read" : "Replied"}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <a href={`mailto:${e.email}`} className="inline-flex items-center gap-1.5 text-sm font-medium text-primary">
+                        <Mail className="h-4 w-4" /> {e.email}
+                      </a>
+                      <button
+                        onClick={() => {
+                          if (confirm("Delete this enquiry?")) removeEnquiry.mutate(e.id);
+                        }}
+                        className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" /> Delete
+                      </button>
+                    </div>
+                  </div>
+                  <p className="mt-3 text-sm text-foreground/80">{e.message}</p>
+                </div>
+              ))
+            )}
+          </section>
+        )}
+
+        {tab === "reviews" && (
+          <section className="mt-10 space-y-3">
+            {!allReviews?.length ? (
+              <p className="text-muted-foreground">No reviews have been left yet.</p>
+            ) : (
+              allReviews.map((r) => (
+                <div key={r.id} className="rounded-[20px] border hairline bg-card p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <p className="flex items-center gap-1.5 font-medium text-foreground">
+                        <Star className="h-4 w-4 fill-[color:var(--accent)] text-[color:var(--accent)]" />
+                        {r.rating} · {r.authorName}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {r.propertyTitle} · {new Date(r.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Link to="/property/$id" params={{ id: r.propertyId }} className="text-sm font-medium text-primary">
+                        View listing
+                      </Link>
+                      <button
+                        onClick={() => {
+                          if (confirm("Remove this review?")) removeReview.mutate(r.id);
+                        }}
+                        className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" /> Remove
+                      </button>
+                    </div>
+                  </div>
+                  {r.comment && <p className="mt-3 text-sm text-foreground/80">{r.comment}</p>}
+                </div>
+              ))
+            )}
           </section>
         )}
 
