@@ -244,8 +244,13 @@ export const uploadPropertyImage = createServerFn({ method: "POST" })
 
     if (error) throw new Error(error.message);
 
-    const { data: urlData } = supabase.storage.from("property-images").getPublicUrl(path);
-    return { url: urlData.publicUrl };
+    // The bucket is private, so hand back a long-lived signed URL (10 years).
+    const { data: urlData, error: signError } = await supabase.storage
+      .from("property-images")
+      .createSignedUrl(path, 60 * 60 * 24 * 3650);
+    if (signError) throw new Error(signError.message);
+    return { url: urlData.signedUrl };
+
   });
 
 export const listCategoryMetadata = createServerFn({ method: "GET" }).handler(async () => {
