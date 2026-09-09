@@ -140,6 +140,32 @@ function NewListingPage() {
     }
   }
 
+  if (!isAdmin) {
+    return (
+      <>
+        <SiteHeader />
+        <main className="container-x pt-28 pb-20 md:pt-32">
+          <div className="mx-auto max-w-lg rounded-[28px] border hairline bg-card p-8 text-center">
+            <h1 className="font-display text-2xl font-semibold text-foreground">Listings are added by RentaGh</h1>
+            <p className="mt-3 text-muted-foreground">
+              Only the administrator can publish properties. If you have a space you want listed, send us the details
+              and we will add it for you.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link to="/contact" className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground">
+                Contact us
+              </Link>
+              <Link to="/dashboard" className="rounded-full border hairline bg-background px-5 py-2.5 text-sm font-semibold text-foreground">
+                Back to dashboard
+              </Link>
+            </div>
+          </div>
+        </main>
+        <SiteFooter />
+      </>
+    );
+  }
+
   return (
     <>
       <SiteHeader />
