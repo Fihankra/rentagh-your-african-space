@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "RentaGh — Every Space. One Platform." },
-      { name: "description", content: "Africa's premium property platform. Rent, buy or list homes, hotels, hostels, lands and commercial spaces across Ghana." },
+      { name: "description", content: "Ghana's property platform for student hostels, houses for rent, building lands and farm lands — verified listings, escrow-protected payments." },
       { property: "og:title", content: "RentaGh — Every Space. One Platform." },
       { property: "og:description", content: "Africa's premium property platform built for Ghana." },
       { property: "og:type", content: "website" },
@@ -35,26 +35,27 @@ function Index() {
         <MobileCategoryRail />
         <FeaturedRail />
         <CategorySpotlight
-          category="vacation"
-          title="Vacation stays along the coast"
-          subtitle="Beachfront villas and palm-shaded retreats from Elmina to Ada."
+          category="hostels"
+          title="Hostels near every campus"
+          subtitle="Safe, verified student accommodation walking distance from KNUST, UG, UCC and more."
         />
         <RegionGrid />
         <CategorySpotlight
-          category="hostels"
-          title="Hostels near every campus"
-          subtitle="Safe, verified accommodation walking distance from KNUST, UG, UCC and more."
+          category="homes"
+          title="Houses for rent across Ghana"
+          subtitle="From Cantonments villas to quiet family homes in Kumasi and Takoradi."
         />
         <CategorySpotlight
-          category="hotels"
-          title="Premium nights, Ghanaian warmth"
-          subtitle="Boutique hotels and serviced apartments in Ghana's most beautiful corners."
+          category="lands"
+          title="Building lands to rent & own"
+          subtitle="Surveyed, documented plots with clear indentures and real road access."
         />
         <CategorySpotlight
           category="farmlands"
-          title="Farmlands to hire & own"
-          subtitle="Productive cocoa, palm and arable plots — fully documented and ready."
+          title="Farm lands to hire & own"
+          subtitle="Productive cocoa, palm and arable land — fully documented and ready."
         />
+
         <StatsBand />
         <Testimonials />
         <AppPromo />
