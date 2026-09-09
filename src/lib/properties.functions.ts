@@ -74,6 +74,8 @@ function mapProperty(row: any, images: any[], landmarks: any[], reviews = 0, rat
       km: Number(l.km),
       mins: Number(l.mins),
     })),
+    status: row.status ?? undefined,
+    listingType: row.listing_type ?? undefined,
   };
 }
 
@@ -81,6 +83,9 @@ const listFiltersSchema = z.object({
   category: z.enum(["all", "hostels", "homes", "lands", "farmlands"]).default("all"),
   region: z.string().default("All regions"),
   query: z.string().default(""),
+  listingType: z.enum(["all", "rent", "sale"]).default("all"),
+  minPrice: z.number().optional(),
+  maxPrice: z.number().optional(),
 });
 
 export const listProperties = createServerFn({ method: "POST" })
@@ -97,6 +102,9 @@ export const listProperties = createServerFn({ method: "POST" })
 
     if (data.category !== "all") q = q.eq("category", data.category);
     if (data.region !== "All regions") q = q.eq("region", data.region);
+    if (data.listingType !== "all") q = q.eq("listing_type", data.listingType);
+    if (typeof data.minPrice === "number") q = q.gte("price", data.minPrice);
+    if (typeof data.maxPrice === "number") q = q.lte("price", data.maxPrice);
 
     const { data: rows, error } = await q;
     if (error) throw new Error(error.message);
@@ -342,4 +350,99 @@ export const claimFirstAdmin = createServerFn({ method: "POST" })
     const { data, error } = await context.supabase.rpc("claim_first_admin");
     if (error) throw new Error(error.message);
     return { ok: data === true };
+  });
+
+const updatePropertySchema = z.object({
+  id: z.string().uuid(),
+  title: z.string().min(3),
+  description: z.string().min(10),
+  category: z.enum(["hostels", "homes", "lands", "farmlands"]),
+  listing_type: z.enum(["rent", "sale"]),
+  price: z.number().positive(),
+  price_period: z.enum(["night", "month", "year", "total"]).optional(),
+  region: z.string().min(1),
+  city: z.string().min(1),
+  neighborhood: z.string().optional(),
+  beds: z.number().int().optional(),
+  baths: z.number().int().optional(),
+  area_sqm: z.number().positive().optional(),
+  status: z.enum(["draft", "published", "archived"]),
+  amenities: z.array(z.string()).default([]),
+  cover_url: z.string().optional(),
+  images: z.array(z.object({ url: z.string(), sort_order: z.number() })).default([]),
+});
+
+/** Owner (or admin) fetch of a single listing, whatever its status. */
+export const getMyProperty = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { id: string }) => data)
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase
+      .from("properties")
+      .select(`*, property_images(*), property_landmarks(*)`)
+      .eq("id", data.id)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!row) return null;
+    return mapProperty(row, (row as any).property_images ?? [], (row as any).property_landmarks ?? []);
+  });
+
+export const updateMyProperty = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => updatePropertySchema.parse(data))
+  .handler(async ({ data, context }) => {
+    const supabase = context.supabase;
+    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+
+    const { data: existing, error: readError } = await supabase
+      .from("properties")
+      .select("id, user_id, status")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (readError) throw new Error(readError.message);
+    if (!existing) throw new Error("Listing not found");
+    if (existing.user_id !== context.userId && !isAdmin) throw new Error("Forbidden");
+
+    // Only admins may move a listing into the published state.
+    const status = data.status === "published" && !isAdmin && existing.status !== "published" ? "draft" : data.status;
+
+    const { error } = await supabase
+      .from("properties")
+      .update({
+        title: data.title,
+        description: data.description,
+        category: data.category,
+        listing_type: data.listing_type,
+        price: data.price,
+        price_period: data.price_period ?? (data.listing_type === "sale" ? "total" : "month"),
+        region: data.region,
+        city: data.city,
+        neighborhood: data.neighborhood,
+        beds: data.beds ?? null,
+        baths: data.baths ?? null,
+        area_sqm: data.area_sqm ?? null,
+        status: status as any,
+        amenities: data.amenities,
+        cover_url: data.cover_url ?? null,
+      })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+
+    if (data.images.length) {
+      await supabase.from("property_images").delete().eq("property_id", data.id);
+      await supabase.from("property_images").insert(
+        data.images.map((img, i) => ({ property_id: data.id, url: img.url, sort_order: img.sort_order ?? i }))
+      );
+    }
+
+    return { id: data.id, status };
+  });
+
+export const deleteMyProperty = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { id: string }) => data)
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase.from("properties").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
   });

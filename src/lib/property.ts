@@ -26,6 +26,8 @@ export type Property = {
   amenities: string[];
   coords: { lat: number; lng: number };
   landmarks: Landmark[];
+  status?: "draft" | "published" | "archived";
+  listingType?: "rent" | "sale";
 };
 
 export function formatGHS(n: number) {
