@@ -6,19 +6,19 @@ const cols = [
   {
     heading: "Discover",
     links: [
-      { to: "/browse/homes", label: "Homes" },
-      { to: "/browse/apartments", label: "Apartments" },
-      { to: "/browse/houses-for-sale", label: "Houses for sale" },
-      { to: "/browse/vacation", label: "Vacation" },
+      { to: "/browse/hostels", label: "Student hostels" },
+      { to: "/browse/homes", label: "Houses for rent" },
+      { to: "/browse/lands", label: "Building lands" },
+      { to: "/browse/farmlands", label: "Farm lands" },
     ],
   },
   {
-    heading: "Spaces",
+    heading: "Support",
     links: [
-      { to: "/browse/hotels", label: "Hotels & Stays" },
-      { to: "/browse/hostels", label: "Student hostels" },
-      { to: "/browse/commercial", label: "Commercial" },
-      { to: "/browse/lands", label: "Lands & Farmlands" },
+      { to: "/faqs", label: "FAQs" },
+      { to: "/terms", label: "Terms & Conditions" },
+      { to: "/contact", label: "Contact us" },
+      { to: "/login", label: "Login" },
     ],
   },
   {
@@ -27,7 +27,7 @@ const cols = [
       { to: "/about", label: "About RentaGh" },
       { to: "/contact", label: "List a property" },
       { to: "/contact", label: "Partner with us" },
-      { to: "/contact", label: "Contact" },
+      { to: "/browse", label: "Browse all" },
     ],
   },
 ];
@@ -42,7 +42,7 @@ export function SiteFooter() {
               <img src={logo} alt="RentaGh" className="h-10 w-auto brightness-0 invert" />
             </div>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/65">
-              Every Space. One Platform. RentaGh is Africa's premium home for renting, buying and listing property — built in Ghana for the continent.
+              Every Space. One Platform. Student hostels, houses for rent, building lands and farm lands — verified across Ghana.
             </p>
             <form
               onSubmit={(e) => e.preventDefault()}
@@ -66,7 +66,7 @@ export function SiteFooter() {
               </div>
               <ul className="mt-5 space-y-3">
                 {col.links.map((l) => (
-                  <li key={l.label}>
+                  <li key={`${col.heading}-${l.label}`}>
                     <Link to={l.to} className="text-sm text-white/75 transition-colors hover:text-white">
                       {l.label}
                     </Link>
