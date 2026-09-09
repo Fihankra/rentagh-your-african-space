@@ -1,9 +1,20 @@
-import { properties } from "@/lib/mock-properties";
+import { useQuery } from "@tanstack/react-query";
 import { PropertyCard } from "@/components/site/PropertyCard";
+import { listProperties } from "@/lib/properties.functions";
 import { SectionHeading } from "./SectionHeading";
 
 export function FeaturedRail() {
-  const list = properties.filter((p) => p.featured);
+  const { data = [], isLoading } = useQuery({
+    queryKey: ["properties"],
+    queryFn: () => listProperties({ data: {} }),
+    staleTime: 60_000,
+  });
+
+  const featured = data.filter((p) => p.featured);
+  const list = (featured.length ? featured : data).slice(0, 3);
+
+  if (!isLoading && list.length === 0) return null;
+
   return (
     <section className="mt-24">
       <SectionHeading
