@@ -38,6 +38,7 @@ export const Route = createFileRoute("/_authenticated/listings/$id/edit")({
 function EditListingPage() {
   const { id } = Route.useParams();
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
   const fileRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
