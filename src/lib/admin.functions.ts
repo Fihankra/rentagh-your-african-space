@@ -18,6 +18,24 @@ export const getCurrentUserRoles = createServerFn({ method: "GET" })
     return (data ?? []).map((r: any) => r.role);
   });
 
+export const getOnboardingState = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: roles, error } = await context.supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId);
+    if (error) throw new Error(error.message);
+
+    const { data: adminExists, error: existsError } = await context.supabase.rpc("admin_exists");
+    if (existsError) throw new Error(existsError.message);
+
+    return {
+      isAdmin: (roles ?? []).some((r: any) => r.role === "admin"),
+      adminExists: adminExists === true,
+    };
+  });
+
 export const adminListUsers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
