@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Gallery } from "@/components/property/Gallery";
 import { MapPlaceholder } from "@/components/property/MapPlaceholder";
+import { EnquiryForm } from "@/components/property/EnquiryForm";
 import { getPropertyById } from "@/lib/properties.functions";
 import { categoryLabel } from "@/lib/categories";
 import { priceLabel, type Property } from "@/lib/property";
@@ -165,33 +166,12 @@ function PropertyPage() {
                 </div>
               </div>
 
-              <form onSubmit={(e) => e.preventDefault()} className="mt-6 space-y-3">
-                <div className="grid grid-cols-2 gap-2 rounded-2xl border hairline p-2">
-                  <label className="rounded-xl px-3 py-2 hover:bg-muted">
-                    <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Check in</div>
-                    <input type="date" className="w-full bg-transparent text-sm focus:outline-none" />
-                  </label>
-                  <label className="rounded-xl px-3 py-2 hover:bg-muted">
-                    <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Check out</div>
-                    <input type="date" className="w-full bg-transparent text-sm focus:outline-none" />
-                  </label>
-                </div>
-                <label className="block rounded-2xl border hairline px-4 py-3">
-                  <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Guests</div>
-                  <input defaultValue="2 adults" className="w-full bg-transparent text-sm focus:outline-none" />
-                </label>
-                <textarea
-                  placeholder="Tell the host a little about your trip…"
-                  rows={3}
-                  className="block w-full resize-none rounded-2xl border hairline bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
-                />
-                <button className="w-full rounded-2xl bg-primary py-4 text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5">
-                  Request to book
-                </button>
-                <button type="button" className="w-full rounded-2xl border hairline bg-card py-4 text-sm font-semibold text-foreground">
-                  Message host
-                </button>
-              </form>
+              <div className="mt-5 border-t hairline pt-4">
+                <div className="font-display text-lg text-foreground">Contact {p.hostName}</div>
+                <p className="text-xs text-muted-foreground">Send a secure enquiry — no phone number needed.</p>
+              </div>
+              <EnquiryForm propertyId={p.id} ownerName={p.hostName} />
+
 
               <div className="mt-6 rounded-2xl bg-[color:var(--cream)] p-4 text-xs text-foreground/70">
                 You won't be charged yet. RentaGh holds payments in escrow until your stay or purchase is confirmed.
