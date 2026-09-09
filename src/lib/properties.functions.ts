@@ -193,8 +193,10 @@ export const createProperty = createServerFn({ method: "POST" })
     const userId = context.userId;
 
     const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
-    const status = (data.status === "published" || data.featured) && !isAdmin ? "draft" : data.status;
-    const featured = data.featured && isAdmin ? true : false;
+    if (!isAdmin) throw new Error("Only the administrator can add listings.");
+    const status = data.status;
+    const featured = data.featured;
+
 
     const { data: inserted, error } = await supabase
       .from("properties")
@@ -257,6 +259,11 @@ export const uploadPropertyImage = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const supabase = context.supabase;
     const userId = context.userId;
+
+    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
+    if (!isAdmin) throw new Error("Only the administrator can upload listing photos.");
+
+
 
     const file = data as File;
     const ext = file.name.split(".").pop() ?? "jpg";
@@ -407,6 +414,8 @@ export const updateMyProperty = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const supabase = context.supabase;
     const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    if (!isAdmin) throw new Error("Only the administrator can edit listings.");
+
 
     const { data: existing, error: readError } = await supabase
       .from("properties")
@@ -456,6 +465,8 @@ export const deleteMyProperty = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: { id: string }) => data)
   .handler(async ({ data, context }) => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    if (!isAdmin) throw new Error("Only the administrator can delete listings.");
     const { error } = await context.supabase.from("properties").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
