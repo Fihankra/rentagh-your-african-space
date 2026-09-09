@@ -18,7 +18,7 @@ export function Hero() {
             Find your next address <span className="italic text-[color:var(--accent)]">in Ghana</span>.
           </h1>
           <p className="mt-4 max-w-xl text-[15px] text-white/85 md:mt-5 md:text-lg">
-            Verified homes, lands, hotels and hostels — beautifully presented, unmistakably African.
+            Student hostels, houses for rent, building and farm lands — verified and beautifully presented.
           </p>
         </div>
 
@@ -40,12 +40,12 @@ export function Hero() {
         <div className="mt-10 hidden w-full md:block">
           <form
             onSubmit={(e) => e.preventDefault()}
-            className="grid grid-cols-[1.3fr_1fr_1fr_0.9fr_auto] gap-px overflow-hidden rounded-3xl bg-white/95 p-2 text-foreground shadow-[var(--shadow-elegant)] backdrop-blur"
+            className="grid grid-cols-[1.3fr_1fr_1fr_auto] gap-px overflow-hidden rounded-3xl bg-white/95 p-2 text-foreground shadow-[var(--shadow-elegant)] backdrop-blur"
           >
             <Field icon={MapPin} label="Where" placeholder="Accra, Kumasi, Cape Coast…" />
-            <Field icon={Search} label="What" placeholder="Apartments, hotels, lands…" />
-            <Field icon={Calendar} label="When" placeholder="Any dates" />
-            <Field icon={Users} label="Guests" placeholder="Add guests" />
+            <Field icon={Search} label="What" placeholder="Hostels, houses, lands…" />
+            <Field icon={Users} label="Budget" placeholder="Any budget" />
+
             <Link
               to="/browse"
               className="m-1 flex items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-4 text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5"
