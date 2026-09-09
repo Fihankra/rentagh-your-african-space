@@ -67,7 +67,7 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
               category === "all" ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground/75 hover:bg-muted"
             )}
           >
-            All
+            All <span className="opacity-70">({categoryCounts["all"] ?? 0})</span>
           </Link>
           {categories.map((c) => (
             <button
@@ -78,7 +78,7 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
                 category === c.slug ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground/75 hover:bg-muted"
               )}
             >
-              {c.label}
+              {c.label} <span className="opacity-70">({categoryCounts[c.slug] ?? 0})</span>
             </button>
           ))}
         </div>
