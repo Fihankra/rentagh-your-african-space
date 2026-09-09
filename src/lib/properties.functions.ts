@@ -260,6 +260,11 @@ export const uploadPropertyImage = createServerFn({ method: "POST" })
     const supabase = context.supabase;
     const userId = context.userId;
 
+    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
+    if (!isAdmin) throw new Error("Only the administrator can upload listing photos.");
+
+
+
     const file = data as File;
     const ext = file.name.split(".").pop() ?? "jpg";
     const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
