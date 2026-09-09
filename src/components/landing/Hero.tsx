@@ -43,7 +43,7 @@ export function Hero() {
             className="grid grid-cols-[1.3fr_1fr_1fr_auto] gap-px overflow-hidden rounded-3xl bg-white/95 p-2 text-foreground shadow-[var(--shadow-elegant)] backdrop-blur"
           >
             <Field icon={MapPin} label="Where" placeholder="Accra, Kumasi, Cape Coast…" />
-            <Field icon={Search} label="What" placeholder="Hostels, houses, lands…" />
+            <Field icon={Search} label="What" placeholder="Student hostel, house, land…" />
             <Field icon={Users} label="Budget" placeholder="Any budget" />
 
             <Link
