@@ -34,8 +34,7 @@ export function RegionGrid() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-6 text-white">
-              <div className="text-[11px] uppercase tracking-[0.22em] text-white/70">{r.region}</div>
-              <div className="mt-1 flex items-end justify-between">
+              <div className="flex items-end justify-between">
                 <h3 className="font-display text-2xl font-semibold md:text-3xl">{r.name}</h3>
                 <div className="text-sm text-white/80">{r.count} listings</div>
               </div>

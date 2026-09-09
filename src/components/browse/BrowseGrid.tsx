@@ -25,8 +25,7 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
     <section className="container-x pt-28 md:pt-32">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <div className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Browse</div>
-          <h1 className="mt-2 font-display text-4xl font-semibold text-foreground md:text-5xl">
+          <h1 className="font-display text-4xl font-semibold text-foreground md:text-5xl">
             {category === "all" ? "All properties" : categories.find((c) => c.slug === category)?.label}
           </h1>
           <p className="mt-2 text-muted-foreground">{list.length} listings · across Ghana</p>

@@ -53,9 +53,8 @@ function AboutPage() {
           </div>
 
           <div className="relative aspect-[4/5] overflow-hidden rounded-[36px]">
-            <img src={hero} alt="Aerial view of Accra" className="absolute inset-0 h-full w-full object-cover" />
+          <img src={hero} alt="Aerial view of Accra" className="absolute inset-0 h-full w-full object-cover" />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-7 text-white">
-              <div className="text-xs uppercase tracking-[0.22em] text-[color:var(--accent)]">Headquartered in</div>
               <div className="font-display text-2xl">Accra, Ghana</div>
             </div>
           </div>
