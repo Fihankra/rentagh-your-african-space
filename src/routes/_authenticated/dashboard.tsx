@@ -265,11 +265,17 @@ function EnquiriesInbox() {
 
 function DashboardPage() {
   const qc = useQueryClient();
+  const { isAdmin } = useAuth();
   const { data: properties, isLoading } = useQuery({
     queryKey: ["my-properties"],
     queryFn: () => getMyProperties(),
+    enabled: isAdmin,
   });
-  const { data: enquiries } = useQuery({ queryKey: ["my-enquiries"], queryFn: () => listMyEnquiries() });
+  const { data: enquiries } = useQuery({
+    queryKey: ["my-enquiries"],
+    queryFn: () => listMyEnquiries(),
+    enabled: isAdmin,
+  });
 
   const remove = useMutation({
     mutationFn: (id: string) => deleteMyProperty({ data: { id } }),
@@ -285,36 +291,74 @@ function DashboardPage() {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="font-display text-3xl font-semibold text-foreground md:text-4xl">Your dashboard</h1>
-            <p className="mt-1 text-muted-foreground">Manage listings, enquiries and account settings.</p>
+            <p className="mt-1 text-muted-foreground">
+              {isAdmin
+                ? "Manage listings, enquiries and account settings."
+                : "Browse verified spaces, send enquiries and leave reviews."}
+            </p>
           </div>
-          <Link
-            to="/listings/new"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-[0_8px_24px_-12px_color-mix(in_oklab,var(--primary)_60%,transparent)] transition-transform hover:-translate-y-0.5"
-          >
-            <Plus className="h-4 w-4" />
-            Add listing
-          </Link>
+          {isAdmin ? (
+            <Link
+              to="/listings/new"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-[0_8px_24px_-12px_color-mix(in_oklab,var(--primary)_60%,transparent)] transition-transform hover:-translate-y-0.5"
+            >
+              <Plus className="h-4 w-4" />
+              Add listing
+            </Link>
+          ) : (
+            <Link
+              to="/browse"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5"
+            >
+              <Home className="h-4 w-4" />
+              Browse spaces
+            </Link>
+          )}
         </div>
 
         <AdminOnboarding />
 
-        <section className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-[24px] border hairline bg-card p-6">
-            <Home className="h-6 w-6 text-primary" />
-            <p className="mt-4 text-3xl font-semibold text-foreground">{published}</p>
-            <p className="text-sm text-muted-foreground">Published listings</p>
-          </div>
-          <div className="rounded-[24px] border hairline bg-card p-6">
-            <MapPin className="h-6 w-6 text-gold" />
-            <p className="mt-4 text-3xl font-semibold text-foreground">{properties?.length ?? 0}</p>
-            <p className="text-sm text-muted-foreground">Total properties</p>
-          </div>
-          <div className="rounded-[24px] border hairline bg-card p-6">
-            <Settings className="h-6 w-6 text-emerald-600" />
-            <p className="mt-4 text-3xl font-semibold text-foreground">{enquiries?.length ?? 0}</p>
-            <p className="text-sm text-muted-foreground">Enquiries</p>
-          </div>
-        </section>
+        {isAdmin && (
+          <section className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="rounded-[24px] border hairline bg-card p-6">
+              <Home className="h-6 w-6 text-primary" />
+              <p className="mt-4 text-3xl font-semibold text-foreground">{published}</p>
+              <p className="text-sm text-muted-foreground">Published listings</p>
+            </div>
+            <div className="rounded-[24px] border hairline bg-card p-6">
+              <MapPin className="h-6 w-6 text-gold" />
+              <p className="mt-4 text-3xl font-semibold text-foreground">{properties?.length ?? 0}</p>
+              <p className="text-sm text-muted-foreground">Total properties</p>
+            </div>
+            <div className="rounded-[24px] border hairline bg-card p-6">
+              <Settings className="h-6 w-6 text-emerald-600" />
+              <p className="mt-4 text-3xl font-semibold text-foreground">{enquiries?.length ?? 0}</p>
+              <p className="text-sm text-muted-foreground">Enquiries</p>
+            </div>
+          </section>
+        )}
+
+        {!isAdmin && (
+          <section className="mt-10 rounded-[24px] border hairline bg-card p-8">
+            <h2 className="font-display text-xl font-semibold text-foreground">Looking for a space?</h2>
+            <p className="mt-2 text-muted-foreground">
+              Listings on RentaGh are published by the RentaGh team. Browse student hostels, houses for rent,
+              building lands and farm lands, then message us straight from any property page.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link
+                to="/browse"
+                className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+              >
+                Browse all
+              </Link>
+              <Link to="/contact" className="rounded-full border hairline bg-background px-5 py-2.5 text-sm font-semibold text-foreground">
+                Contact us
+              </Link>
+            </div>
+          </section>
+        )}
+
 
         <section className="mt-12">
           <h2 className="font-display text-xl font-semibold text-foreground">Your listings</h2>
