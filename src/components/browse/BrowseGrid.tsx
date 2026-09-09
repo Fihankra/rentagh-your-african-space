@@ -12,14 +12,32 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
   const [region, setRegion] = useState<(typeof regions)[number]>("All regions");
   const [query, setQuery] = useState("");
 
+  const matchesQuery = (p: (typeof properties)[number]) =>
+    !query || `${p.title} ${p.city} ${p.neighborhood}`.toLowerCase().includes(query.toLowerCase());
+
   const list = useMemo(() => {
     return properties.filter((p) => {
       if (category !== "all" && p.category !== category) return false;
       if (region !== "All regions" && p.region !== region) return false;
-      if (query && !`${p.title} ${p.city} ${p.neighborhood}`.toLowerCase().includes(query.toLowerCase())) return false;
-      return true;
+      return matchesQuery(p);
     });
   }, [category, region, query]);
+
+  // Counts shown on each facet reflect the other active filters, so the number
+  // on a chip always equals the results you get after clicking it.
+  const categoryCounts = useMemo(() => {
+    const base = properties.filter((p) => (region === "All regions" || p.region === region) && matchesQuery(p));
+    const counts: Record<string, number> = { all: base.length };
+    for (const c of categories) counts[c.slug] = base.filter((p) => p.category === c.slug).length;
+    return counts;
+  }, [region, query]);
+
+  const regionCounts = useMemo(() => {
+    const base = properties.filter((p) => (category === "all" || p.category === category) && matchesQuery(p));
+    const counts: Record<string, number> = { "All regions": base.length };
+    for (const r of regions) if (r !== "All regions") counts[r] = base.filter((p) => p.region === r).length;
+    return counts;
+  }, [category, query]);
 
   return (
     <section className="container-x pt-28 md:pt-32">
@@ -49,7 +67,7 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
               category === "all" ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground/75 hover:bg-muted"
             )}
           >
-            All
+            All <span className="opacity-70">({categoryCounts["all"] ?? 0})</span>
           </Link>
           {categories.map((c) => (
             <button
@@ -60,7 +78,7 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
                 category === c.slug ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground/75 hover:bg-muted"
               )}
             >
-              {c.label}
+              {c.label} <span className="opacity-70">({categoryCounts[c.slug] ?? 0})</span>
             </button>
           ))}
         </div>
@@ -76,7 +94,7 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
               region === r ? "bg-foreground text-background" : "bg-muted text-foreground/70 hover:bg-muted/70"
             )}
           >
-            {r}
+            {r} <span className="opacity-70">({regionCounts[r] ?? 0})</span>
           </button>
         ))}
       </div>
