@@ -5,7 +5,7 @@ export function CategoryRail() {
   return (
     <section className="container-x -mt-14 relative z-10 hidden md:block">
       <div className="rounded-[28px] border hairline bg-card p-3 shadow-[var(--shadow-card)]">
-        <div className="grid grid-cols-9 gap-1">
+        <div className="grid grid-cols-4 gap-1">
           {categories.map(({ slug, label, icon: Icon }) => (
             <Link
               key={slug}

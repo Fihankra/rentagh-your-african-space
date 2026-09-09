@@ -8,7 +8,7 @@ export const Route = createFileRoute("/browse")({
   head: () => ({
     meta: [
       { title: "Browse properties — RentaGh" },
-      { name: "description", content: "Browse verified homes, apartments, hotels, hostels, lands and commercial spaces across Ghana on RentaGh." },
+      { name: "description", content: "Browse verified student hostels, houses for rent, building lands and farm lands across Ghana on RentaGh." },
       { property: "og:title", content: "Browse properties — RentaGh" },
       { property: "og:description", content: "Verified listings across Ghana." },
       { property: "og:url", content: "/browse" },
