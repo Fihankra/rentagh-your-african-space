@@ -4,13 +4,15 @@ import { Menu, X } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { cn } from "@/lib/utils";
 
-const nav = [
-  { to: "/browse", label: "Browse" },
-  { to: "/browse/hotels", label: "Hotels & Stays" },
-  { to: "/browse/hostels", label: "Hostels" },
-  { to: "/browse/lands", label: "Lands" },
-  { to: "/about", label: "About" },
+const nav: { to: string; params?: Record<string, string>; label: string }[] = [
+  { to: "/browse/$category", params: { category: "homes" }, label: "Houses" },
+  { to: "/browse/$category", params: { category: "hostels" }, label: "Hostel" },
+  { to: "/browse/$category", params: { category: "lands" }, label: "Lands" },
+  { to: "/terms", label: "Terms & Conditions" },
+  { to: "/faqs", label: "FAQs" },
+  { to: "/contact", label: "Contact Us" },
 ];
+
 
 export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
   const [scrolled, setScrolled] = useState(false);

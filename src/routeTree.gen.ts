@@ -9,6 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as FaqsRouteImport } from './routes/faqs'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as BrowseRouteImport } from './routes/browse'
 import { Route as AboutRouteImport } from './routes/about'
@@ -16,6 +19,21 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PropertyIdRouteImport } from './routes/property.$id'
 import { Route as BrowseCategoryRouteImport } from './routes/browse.$category'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqsRoute = FaqsRouteImport.update({
+  id: '/faqs',
+  path: '/faqs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -52,6 +70,9 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/browse': typeof BrowseRouteWithChildren
   '/contact': typeof ContactRoute
+  '/faqs': typeof FaqsRoute
+  '/login': typeof LoginRoute
+  '/terms': typeof TermsRoute
   '/browse/$category': typeof BrowseCategoryRoute
   '/property/$id': typeof PropertyIdRoute
 }
@@ -60,6 +81,9 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/browse': typeof BrowseRouteWithChildren
   '/contact': typeof ContactRoute
+  '/faqs': typeof FaqsRoute
+  '/login': typeof LoginRoute
+  '/terms': typeof TermsRoute
   '/browse/$category': typeof BrowseCategoryRoute
   '/property/$id': typeof PropertyIdRoute
 }
@@ -69,6 +93,9 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/browse': typeof BrowseRouteWithChildren
   '/contact': typeof ContactRoute
+  '/faqs': typeof FaqsRoute
+  '/login': typeof LoginRoute
+  '/terms': typeof TermsRoute
   '/browse/$category': typeof BrowseCategoryRoute
   '/property/$id': typeof PropertyIdRoute
 }
@@ -79,6 +106,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/browse'
     | '/contact'
+    | '/faqs'
+    | '/login'
+    | '/terms'
     | '/browse/$category'
     | '/property/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +117,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/browse'
     | '/contact'
+    | '/faqs'
+    | '/login'
+    | '/terms'
     | '/browse/$category'
     | '/property/$id'
   id:
@@ -95,6 +128,9 @@ export interface FileRouteTypes {
     | '/about'
     | '/browse'
     | '/contact'
+    | '/faqs'
+    | '/login'
+    | '/terms'
     | '/browse/$category'
     | '/property/$id'
   fileRoutesById: FileRoutesById
@@ -104,11 +140,35 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   BrowseRoute: typeof BrowseRouteWithChildren
   ContactRoute: typeof ContactRoute
+  FaqsRoute: typeof FaqsRoute
+  LoginRoute: typeof LoginRoute
+  TermsRoute: typeof TermsRoute
   PropertyIdRoute: typeof PropertyIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faqs': {
+      id: '/faqs'
+      path: '/faqs'
+      fullPath: '/faqs'
+      preLoaderRoute: typeof FaqsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -170,6 +230,9 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   BrowseRoute: BrowseRouteWithChildren,
   ContactRoute: ContactRoute,
+  FaqsRoute: FaqsRoute,
+  LoginRoute: LoginRoute,
+  TermsRoute: TermsRoute,
   PropertyIdRoute: PropertyIdRoute,
 }
 export const routeTree = rootRouteImport
