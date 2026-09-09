@@ -144,6 +144,29 @@ function EditListingPage() {
 
   const isLand = category === "lands" || category === "farmlands";
 
+  if (!isAdmin) {
+    return (
+      <>
+        <SiteHeader />
+        <main className="container-x pt-28 pb-20 md:pt-32">
+          <div className="mx-auto max-w-lg rounded-[28px] border hairline bg-card p-8 text-center">
+            <h1 className="font-display text-2xl font-semibold text-foreground">Only the administrator can edit listings</h1>
+            <p className="mt-3 text-muted-foreground">Browse the site or get in touch if something needs updating.</p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link to="/browse" className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground">
+                Browse spaces
+              </Link>
+              <Link to="/dashboard" className="rounded-full border hairline bg-background px-5 py-2.5 text-sm font-semibold text-foreground">
+                Back to dashboard
+              </Link>
+            </div>
+          </div>
+        </main>
+        <SiteFooter />
+      </>
+    );
+  }
+
   return (
     <>
       <SiteHeader />
