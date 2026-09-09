@@ -171,7 +171,7 @@ export const createProperty = createServerFn({ method: "POST" })
     const userId = context.userId;
 
     const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
-    const status = (data.status === "published" || data.featured) && !isAdmin ? "pending" : data.status;
+    const status = (data.status === "published" || data.featured) && !isAdmin ? "draft" : data.status;
     const featured = data.featured && isAdmin ? true : false;
 
     const { data: inserted, error } = await supabase
