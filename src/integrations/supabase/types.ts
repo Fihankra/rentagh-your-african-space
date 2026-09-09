@@ -97,6 +97,38 @@ export type Database = {
           },
         ]
       }
+      enquiry_replies: {
+        Row: {
+          body: string
+          created_at: string
+          enquiry_id: string
+          id: string
+          owner_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          enquiry_id: string
+          id?: string
+          owner_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          enquiry_id?: string
+          id?: string
+          owner_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enquiry_replies_enquiry_id_fkey"
+            columns: ["enquiry_id"]
+            isOneToOne: false
+            referencedRelation: "enquiries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -281,6 +313,47 @@ export type Database = {
           },
         ]
       }
+      reviews: {
+        Row: {
+          author_name: string | null
+          comment: string | null
+          created_at: string
+          id: string
+          property_id: string
+          rating: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          author_name?: string | null
+          comment?: string | null
+          created_at?: string
+          id?: string
+          property_id: string
+          rating: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          author_name?: string | null
+          comment?: string | null
+          created_at?: string
+          id?: string
+          property_id?: string
+          rating?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -322,6 +395,14 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      property_rating_summary: {
+        Args: never
+        Returns: {
+          avg_rating: number
+          property_id: string
+          review_count: number
+        }[]
       }
     }
     Enums: {

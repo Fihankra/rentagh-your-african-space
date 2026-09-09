@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Gallery } from "@/components/property/Gallery";
 import { MapPlaceholder } from "@/components/property/MapPlaceholder";
+import { Reviews } from "@/components/property/Reviews";
 import { EnquiryForm } from "@/components/property/EnquiryForm";
 import { getPropertyById } from "@/lib/properties.functions";
 import { categoryLabel } from "@/lib/categories";
@@ -74,7 +75,11 @@ function PropertyPage() {
           <div>
             <h1 className="font-display text-4xl font-semibold text-foreground md:text-5xl">{p.title}</h1>
             <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1"><Star className="h-4 w-4 fill-[color:var(--accent)] text-[color:var(--accent)]" /> {p.rating} · {p.reviews} reviews</span>
+              {p.reviews > 0 ? (
+                <span className="flex items-center gap-1"><Star className="h-4 w-4 fill-[color:var(--accent)] text-[color:var(--accent)]" /> {p.rating} · {p.reviews} {p.reviews === 1 ? "review" : "reviews"}</span>
+              ) : (
+                <span>New listing</span>
+              )}
               <span className="flex items-center gap-1"><MapPin className="h-4 w-4" /> {p.neighborhood}, {p.city}</span>
               {p.verified && <span className="flex items-center gap-1 text-primary"><BadgeCheck className="h-4 w-4" /> Verified by RentaGh</span>}
             </div>
@@ -154,6 +159,8 @@ function PropertyPage() {
                 })}
               </ul>
             </div>
+
+            <Reviews propertyId={p.id} />
           </div>
 
           {/* inquiry sidebar */}
@@ -162,7 +169,11 @@ function PropertyPage() {
               <div className="flex items-baseline justify-between">
                 <div className="font-display text-3xl font-semibold text-foreground">{priceLabel(p)}</div>
                 <div className="flex items-center gap-1 text-sm text-foreground/70">
-                  <Star className="h-4 w-4 fill-[color:var(--accent)] text-[color:var(--accent)]" /> {p.rating}
+                  {p.reviews > 0 && (
+                    <>
+                      <Star className="h-4 w-4 fill-[color:var(--accent)] text-[color:var(--accent)]" /> {p.rating}
+                    </>
+                  )}
                 </div>
               </div>
 

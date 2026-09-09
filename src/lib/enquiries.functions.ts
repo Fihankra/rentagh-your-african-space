@@ -56,7 +56,9 @@ export const listMyEnquiries = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("enquiries")
-      .select("id, property_id, name, email, phone, message, status, created_at, properties(title)")
+      .select(
+        "id, property_id, name, email, phone, message, status, created_at, properties(title), enquiry_replies(id, body, created_at)"
+      )
       .order("created_at", { ascending: false })
       .limit(100);
     if (error) throw new Error(error.message);
@@ -70,7 +72,26 @@ export const listMyEnquiries = createServerFn({ method: "GET" })
       message: e.message as string,
       status: e.status as string,
       createdAt: e.created_at as string,
+      replies: ((e.enquiry_replies ?? []) as any[])
+        .map((r) => ({ id: r.id as string, body: r.body as string, createdAt: r.created_at as string }))
+        .sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
     }));
+  });
+
+/** Owner: reply inside an enquiry thread. Marks the enquiry as replied. */
+export const replyToEnquiry = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) =>
+    z.object({ id: z.string().uuid(), body: z.string().min(2).max(2000) }).parse(data)
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { error } = await supabase
+      .from("enquiry_replies")
+      .insert({ enquiry_id: data.id, owner_id: userId, body: data.body.trim() });
+    if (error) throw new Error(error.message);
+    await supabase.from("enquiries").update({ status: "replied" }).eq("id", data.id);
+    return { ok: true };
   });
 
 export const updateEnquiryStatus = createServerFn({ method: "POST" })

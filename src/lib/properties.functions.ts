@@ -41,6 +41,17 @@ async function fetchImages(supabase: any, ids: string[]) {
   return by;
 }
 
+/** Average rating + review count per published listing, keyed by property id. */
+async function fetchRatings(supabase: any): Promise<Record<string, { avg: number; count: number }>> {
+  const { data, error } = await supabase.rpc("property_rating_summary");
+  if (error) return {};
+  const by: Record<string, { avg: number; count: number }> = {};
+  for (const r of data ?? []) {
+    by[r.property_id] = { avg: Number(r.avg_rating ?? 0), count: Number(r.review_count ?? 0) };
+  }
+  return by;
+}
+
 function mapProperty(row: any, images: any[], landmarks: any[], reviews = 0, rating = 0): Property {
   const category = row.category as CategorySlug;
   const gallery = [row.cover_url, ...images.map((i) => i.url).filter((u) => u && u !== row.cover_url)].filter(Boolean);
@@ -116,13 +127,15 @@ export const listProperties = createServerFn({ method: "POST" })
       return text.includes(query);
     });
 
+    const ratings = await fetchRatings(supabase);
+
     return filtered.map((p) =>
       mapProperty(
         p,
         p.property_images ?? [],
         p.property_landmarks ?? [],
-        Math.floor(Math.random() * 80) + 5,
-        Number((Math.random() * 1.5 + 3.5).toFixed(2))
+        ratings[p.id]?.count ?? 0,
+        ratings[p.id]?.avg ?? 0
       )
     );
   });
@@ -139,12 +152,13 @@ export const getPropertyById = createServerFn({ method: "GET" })
       .single();
 
     if (error || !row) return null;
+    const ratings = await fetchRatings(supabase);
     return mapProperty(
       row,
       row.property_images ?? [],
       row.property_landmarks ?? [],
-      Math.floor(Math.random() * 120) + 10,
-      Number((Math.random() * 1.2 + 4.0).toFixed(2))
+      ratings[row.id]?.count ?? 0,
+      ratings[row.id]?.avg ?? 0
     );
   });
 
