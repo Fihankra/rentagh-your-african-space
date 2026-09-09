@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { SlidersHorizontal, X } from "lucide-react";
@@ -66,6 +66,17 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
     if (sort === "price-desc") return [...filtered].sort((a, b) => b.priceGHS - a.priceGHS);
     return filtered;
   }, [source, category, region, query, availability, minPrice, maxPrice, sort]);
+
+  const perPage = 9;
+  const [page, setPage] = useState(1);
+  const totalPages = Math.max(1, Math.ceil(list.length / perPage));
+  const safePage = Math.min(page, totalPages);
+  const pageItems = list.slice((safePage - 1) * perPage, safePage * perPage);
+
+  // Any filter change returns to the first page of results.
+  useEffect(() => {
+    setPage(1);
+  }, [category, region, query, availability, minPrice, maxPrice, sort]);
 
   const categoryCounts = useMemo(() => {
     const base = source.filter((p) => (region === "All regions" || p.region === region) && matchesSecondary(p));
@@ -257,8 +268,43 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
       )}
 
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {list.map((p) => <PropertyCard key={p.id} p={p} />)}
+        {pageItems.map((p) => <PropertyCard key={p.id} p={p} />)}
       </div>
+
+      {totalPages > 1 && (
+        <nav className="mt-10 flex flex-wrap items-center justify-center gap-2" aria-label="Pagination">
+          <button
+            type="button"
+            onClick={() => setPage((n) => Math.max(1, n - 1))}
+            disabled={safePage === 1}
+            className="rounded-full border hairline bg-card px-4 py-2.5 text-sm font-medium text-foreground disabled:opacity-40"
+          >
+            Previous
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+            <button
+              key={n}
+              type="button"
+              onClick={() => setPage(n)}
+              aria-current={n === safePage ? "page" : undefined}
+              className={cn(
+                "min-w-10 rounded-full px-3.5 py-2.5 text-sm font-semibold transition-colors",
+                n === safePage ? "bg-primary text-primary-foreground" : "bg-muted text-foreground/70 hover:bg-muted/70"
+              )}
+            >
+              {n}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => setPage((n) => Math.min(totalPages, n + 1))}
+            disabled={safePage === totalPages}
+            className="rounded-full border hairline bg-card px-4 py-2.5 text-sm font-medium text-foreground disabled:opacity-40"
+          >
+            Next
+          </button>
+        </nav>
+      )}
 
       {isLoading && list.length === 0 && (
         <div className="mt-16 rounded-3xl border hairline bg-card p-12 text-center text-muted-foreground">
