@@ -276,7 +276,7 @@ export const updateCategoryMetadata = createServerFn({ method: "POST" })
     const { error } = await context.supabase
       .from("category_metadata")
       .update({ label: data.label, tagline: data.tagline, sort_order: data.sort_order })
-      .eq("slug", data.slug);
+      .eq("slug", data.slug as Database["public"]["Enums"]["property_category"]);
 
     if (error) throw new Error(error.message);
     return { ok: true };
