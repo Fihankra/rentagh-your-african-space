@@ -74,6 +74,8 @@ function mapProperty(row: any, images: any[], landmarks: any[], reviews = 0, rat
       km: Number(l.km),
       mins: Number(l.mins),
     })),
+    status: row.status ?? undefined,
+    listingType: row.listing_type ?? undefined,
   };
 }
 
@@ -81,6 +83,9 @@ const listFiltersSchema = z.object({
   category: z.enum(["all", "hostels", "homes", "lands", "farmlands"]).default("all"),
   region: z.string().default("All regions"),
   query: z.string().default(""),
+  listingType: z.enum(["all", "rent", "sale"]).default("all"),
+  minPrice: z.number().optional(),
+  maxPrice: z.number().optional(),
 });
 
 export const listProperties = createServerFn({ method: "POST" })
