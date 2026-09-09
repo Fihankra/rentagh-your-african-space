@@ -65,3 +65,10 @@ Brand: Deep Emerald #014421, Gold #D4A437, Cream #F8F6F1. Mobile-first African l
 - Database changes go through migrations, never by hand.
 - Categories are fixed: `hostels`, `homes`, `lands`, `farmlands`.
 - Only admins may publish or feature a listing; this is enforced on the server.
+
+## Update — owner tools & enquiries (done)
+- Demo listings seeded (2 per category) so public pages show content.
+- Advanced browse filters: category, region, search, rent/sale, price range, sorting.
+- Owner listing management: edit route `/listings/$id/edit`, delete from dashboard.
+- Enquiry flow: form on each property page + owner inbox with read/replied status.
+- Still open: Supabase linter warnings (SECURITY DEFINER exposure, leaked-password protection), public image bucket blocked by workspace policy (signed URLs used instead).
