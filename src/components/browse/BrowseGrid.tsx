@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { PropertyCard } from "@/components/site/PropertyCard";
-import { properties } from "@/lib/mock-properties";
+import { properties as fallbackProperties } from "@/lib/mock-properties";
+import { listProperties } from "@/lib/properties.functions";
 import { categories, type CategorySlug } from "@/lib/categories";
 import { cn } from "@/lib/utils";
 
@@ -12,32 +14,39 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
   const [region, setRegion] = useState<(typeof regions)[number]>("All regions");
   const [query, setQuery] = useState("");
 
-  const matchesQuery = (p: (typeof properties)[number]) =>
+  const { data: live = [], isLoading } = useQuery({
+    queryKey: ["properties"],
+    queryFn: () => listProperties(),
+    staleTime: 60_000,
+  });
+
+  // Fall back to demo data while the connected database is empty.
+  const source = live.length ? live : fallbackProperties;
+
+  const matchesQuery = (p: (typeof source)[number]) =>
     !query || `${p.title} ${p.city} ${p.neighborhood}`.toLowerCase().includes(query.toLowerCase());
 
   const list = useMemo(() => {
-    return properties.filter((p) => {
+    return source.filter((p) => {
       if (category !== "all" && p.category !== category) return false;
       if (region !== "All regions" && p.region !== region) return false;
       return matchesQuery(p);
     });
-  }, [category, region, query]);
+  }, [source, category, region, query]);
 
-  // Counts shown on each facet reflect the other active filters, so the number
-  // on a chip always equals the results you get after clicking it.
   const categoryCounts = useMemo(() => {
-    const base = properties.filter((p) => (region === "All regions" || p.region === region) && matchesQuery(p));
+    const base = source.filter((p) => (region === "All regions" || p.region === region) && matchesQuery(p));
     const counts: Record<string, number> = { all: base.length };
     for (const c of categories) counts[c.slug] = base.filter((p) => p.category === c.slug).length;
     return counts;
-  }, [region, query]);
+  }, [source, region, query]);
 
   const regionCounts = useMemo(() => {
-    const base = properties.filter((p) => (category === "all" || p.category === category) && matchesQuery(p));
+    const base = source.filter((p) => (category === "all" || p.category === category) && matchesQuery(p));
     const counts: Record<string, number> = { "All regions": base.length };
     for (const r of regions) if (r !== "All regions") counts[r] = base.filter((p) => p.region === r).length;
     return counts;
-  }, [category, query]);
+  }, [source, category, query]);
 
   return (
     <section className="container-x pt-28 md:pt-32">
@@ -56,7 +65,6 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
         />
       </div>
 
-      {/* Filter chips */}
       <div className="mt-8 -mx-5 overflow-x-auto px-5">
         <div className="flex gap-2">
           <Link
@@ -103,7 +111,13 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
         {list.map((p) => <PropertyCard key={p.id} p={p} />)}
       </div>
 
-      {list.length === 0 && (
+      {isLoading && list.length === 0 && (
+        <div className="mt-16 rounded-3xl border hairline bg-card p-12 text-center text-muted-foreground">
+          Loading listings…
+        </div>
+      )}
+
+      {!isLoading && list.length === 0 && (
         <div className="mt-16 rounded-3xl border hairline bg-card p-12 text-center">
           <div className="font-display text-2xl text-foreground">No listings match your filters</div>
           <p className="mt-2 text-muted-foreground">Try a different region or clear your search.</p>

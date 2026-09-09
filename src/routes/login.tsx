@@ -1,6 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -10,28 +12,120 @@ export const Route = createFileRoute("/login")({
       { name: "description", content: "Sign in to RentaGh to manage your rentals, listings and enquiries." },
       { property: "og:title", content: "Login — RentaGh" },
       { property: "og:description", content: "Sign in to manage your rentals, listings and enquiries on RentaGh." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: "/login" }],
   }),
 });
 
 function LoginPage() {
+  const navigate = useNavigate();
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setMessage("");
+    setLoading(true);
+
+    try {
+      if (mode === "signup") {
+        const { data, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: fullName },
+            emailRedirectTo: window.location.origin,
+          },
+        });
+        if (signUpError) throw signUpError;
+        if (data.user && data.user.identities && data.user.identities.length === 0) {
+          setMessage("This email is already registered. Try signing in.");
+        } else {
+          setMessage("Check your email to confirm your account, then sign in.");
+        }
+      } else {
+        const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        if (signInError) throw signInError;
+        navigate({ to: "/dashboard", replace: true });
+      }
+    } catch (err: any) {
+      setError(err.message ?? "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <>
       <SiteHeader />
       <main className="container-x pt-32 pb-20">
         <div className="mx-auto w-full max-w-md rounded-[32px] border hairline bg-card p-8 shadow-[var(--shadow-card)]">
-          <h1 className="font-display text-3xl font-semibold text-foreground">Welcome back</h1>
+          <h1 className="font-display text-3xl font-semibold text-foreground">
+            {mode === "signin" ? "Welcome back" : "Create an account"}
+          </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Sign in to manage your rentals, listings and enquiries.
+            {mode === "signin"
+              ? "Sign in to manage your rentals, listings and enquiries."
+              : "Join RentaGh to list your properties and manage rentals."}
           </p>
 
-          <form
-            className="mt-8 space-y-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
-          >
+          <div className="mt-6 flex rounded-full bg-muted p-1">
+            <button
+              type="button"
+              onClick={() => setMode("signin")}
+              className={`flex-1 rounded-full py-2 text-sm font-medium transition-colors ${
+                mode === "signin" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
+              }`}
+            >
+              Sign in
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode("signup")}
+              className={`flex-1 rounded-full py-2 text-sm font-medium transition-colors ${
+                mode === "signup" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
+              }`}
+            >
+              Sign up
+            </button>
+          </div>
+
+          {message && (
+            <div className="mt-6 rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-200">
+              {message}
+            </div>
+          )}
+          {error && (
+            <div className="mt-6 rounded-2xl bg-red-50 p-4 text-sm text-red-800 dark:bg-red-950/30 dark:text-red-200">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            {mode === "signup" && (
+              <div>
+                <label htmlFor="fullName" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                  Full name
+                </label>
+                <input
+                  id="fullName"
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required={mode === "signup"}
+                  placeholder="Kwame Asare"
+                  className="mt-2 w-full rounded-2xl border hairline bg-background px-4 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-[color:var(--ring)]"
+                />
+              </div>
+            )}
             <div>
               <label htmlFor="email" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 Email
@@ -39,6 +133,9 @@ function LoginPage() {
               <input
                 id="email"
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
                 autoComplete="email"
                 placeholder="you@example.com"
                 className="mt-2 w-full rounded-2xl border hairline bg-background px-4 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-[color:var(--ring)]"
@@ -51,28 +148,41 @@ function LoginPage() {
               <input
                 id="password"
                 type="password"
-                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+                autoComplete={mode === "signin" ? "current-password" : "new-password"}
                 placeholder="••••••••"
                 className="mt-2 w-full rounded-2xl border hairline bg-background px-4 py-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-[color:var(--ring)]"
               />
             </div>
             <button
               type="submit"
-              className="w-full rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5"
+              disabled={loading}
+              className="w-full rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5 disabled:opacity-60"
             >
-              Sign in
+              {loading ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-xs text-muted-foreground">
-            Accounts are not switched on yet — this is the sign-in screen your dashboards will use.
-          </p>
+          {mode === "signin" && (
+            <p className="mt-4 text-center text-sm text-muted-foreground">
+              <Link to="/reset-password" className="font-semibold text-primary">
+                Forgot password?
+              </Link>
+            </p>
+          )}
 
-          <p className="mt-4 text-center text-sm text-muted-foreground">
-            New to RentaGh?{" "}
-            <Link to="/contact" className="font-semibold text-primary">
-              Talk to our team
-            </Link>
+          <p className="mt-6 text-center text-sm text-muted-foreground">
+            {mode === "signin" ? "New to RentaGh?" : "Already have an account?"}{" "}
+            <button
+              type="button"
+              onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+              className="font-semibold text-primary"
+            >
+              {mode === "signin" ? "Create an account" : "Sign in"}
+            </button>
           </p>
         </div>
       </main>
