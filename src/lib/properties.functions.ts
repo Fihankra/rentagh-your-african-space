@@ -465,6 +465,8 @@ export const deleteMyProperty = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: { id: string }) => data)
   .handler(async ({ data, context }) => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    if (!isAdmin) throw new Error("Only the administrator can delete listings.");
     const { error } = await context.supabase.from("properties").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
