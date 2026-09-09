@@ -81,15 +81,23 @@ function NewListingPage() {
     const userId = session.session?.user.id;
     if (!userId) return;
     for (const file of Array.from(files)) {
-      const path = `${userId}/${Date.now()}-${file.name}`;
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
+      const path = `${userId}/${Date.now()}-${safeName}`;
       const { error: uploadError } = await supabase.storage.from(bucket).upload(path, file);
       if (uploadError) {
         setError(uploadError.message);
         continue;
       }
-      const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(path);
-      setImages((prev) => [...prev, { url: urlData.publicUrl, file }]);
+      const { data: urlData, error: signError } = await supabase.storage
+        .from(bucket)
+        .createSignedUrl(path, 60 * 60 * 24 * 3650);
+      if (signError || !urlData) {
+        setError(signError?.message ?? "Could not prepare the photo link.");
+        continue;
+      }
+      setImages((prev) => [...prev, { url: urlData.signedUrl, file }]);
     }
+
   }
 
   async function handleSubmit(e: React.FormEvent) {

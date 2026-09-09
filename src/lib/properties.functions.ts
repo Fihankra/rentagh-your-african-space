@@ -1,17 +1,20 @@
-// @ts-nocheck
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { Database } from "@/integrations/supabase/types";
 import type { Property, Landmark } from "./property";
 import type { CategorySlug } from "./categories";
 
 function getPublicClient() {
   const url = process.env.SUPABASE_URL ?? "";
-  const key = process.env.SUPABASE_PUBLISHABLE_KEY ?? "";
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY ?? "";
   if (!url || !key) throw new Error("Supabase not configured");
-  return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+  return createClient<Database>(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
 }
+
 
 function numericOrNull(v: unknown): number | undefined {
   if (v === null || v === undefined || v === "") return undefined;
@@ -168,7 +171,7 @@ export const createProperty = createServerFn({ method: "POST" })
     const userId = context.userId;
 
     const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
-    const status = (data.status === "published" || data.featured) && !isAdmin ? "pending" : data.status;
+    const status = (data.status === "published" || data.featured) && !isAdmin ? "draft" : data.status;
     const featured = data.featured && isAdmin ? true : false;
 
     const { data: inserted, error } = await supabase
@@ -244,8 +247,13 @@ export const uploadPropertyImage = createServerFn({ method: "POST" })
 
     if (error) throw new Error(error.message);
 
-    const { data: urlData } = supabase.storage.from("property-images").getPublicUrl(path);
-    return { url: urlData.publicUrl };
+    // The bucket is private, so hand back a long-lived signed URL (10 years).
+    const { data: urlData, error: signError } = await supabase.storage
+      .from("property-images")
+      .createSignedUrl(path, 60 * 60 * 24 * 3650);
+    if (signError) throw new Error(signError.message);
+    return { url: urlData.signedUrl };
+
   });
 
 export const listCategoryMetadata = createServerFn({ method: "GET" }).handler(async () => {
@@ -268,7 +276,7 @@ export const updateCategoryMetadata = createServerFn({ method: "POST" })
     const { error } = await context.supabase
       .from("category_metadata")
       .update({ label: data.label, tagline: data.tagline, sort_order: data.sort_order })
-      .eq("slug", data.slug);
+      .eq("slug", data.slug as Database["public"]["Enums"]["property_category"]);
 
     if (error) throw new Error(error.message);
     return { ok: true };
