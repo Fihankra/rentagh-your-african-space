@@ -36,10 +36,12 @@ export function PropertyCard({ p, eager = false }: { p: Property; eager?: boolea
       <div className="p-5">
         <div className="flex items-start justify-between gap-3">
           <h3 className="font-display text-lg font-semibold text-foreground">{p.title}</h3>
-          <div className="flex shrink-0 items-center gap-1 text-sm text-foreground/70">
-            <Star className="h-3.5 w-3.5 fill-[color:var(--accent)] text-[color:var(--accent)]" />
-            {p.rating}
-          </div>
+          {p.reviews > 0 && (
+            <div className="flex shrink-0 items-center gap-1 text-sm text-foreground/70">
+              <Star className="h-3.5 w-3.5 fill-[color:var(--accent)] text-[color:var(--accent)]" />
+              {p.rating}
+            </div>
+          )}
         </div>
         <div className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
           <MapPin className="h-3.5 w-3.5" />
