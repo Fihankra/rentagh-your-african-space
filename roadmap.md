@@ -72,3 +72,9 @@ Brand: Deep Emerald #014421, Gold #D4A437, Cream #F8F6F1. Mobile-first African l
 - Owner listing management: edit route `/listings/$id/edit`, delete from dashboard.
 - Enquiry flow: form on each property page + owner inbox with read/replied status.
 - Still open: Supabase linter warnings (SECURITY DEFINER exposure, leaked-password protection), public image bucket blocked by workspace policy (signed URLs used instead).
+
+## Update — reviews, threads, pagination
+- Reviews & ratings: `reviews` table (1 per person per listing), public read on published listings, star form on property pages, real averages replace placeholder ratings.
+- Enquiry threads: `enquiry_replies` table, owner reply box with confirmation template, status filters (all/new/read/replied) in the dashboard inbox.
+- Browse: pagination (9 per page) on top of category/region/search/rent-sale/price/sort filters.
+- Admin: no real admin yet — first signed-up user must claim it from the dashboard ("Become the administrator"), then can promote others.
