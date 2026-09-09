@@ -47,11 +47,12 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           <img src={logo} alt="RentaGh" className="h-8 w-auto md:h-10" />
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-6 md:flex">
           {nav.map((n) => (
             <Link
-              key={n.to}
-              to={n.to}
+              key={n.label}
+              to={n.to as never}
+              params={n.params as never}
               className={cn(
                 "text-sm font-medium transition-colors",
                 solid ? "text-foreground/75 hover:text-primary" : "text-white/85 hover:text-white"
@@ -65,19 +66,10 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
 
         <div className="hidden items-center gap-3 md:flex">
           <Link
-            to="/contact"
-            className={cn(
-              "text-sm font-medium transition-colors",
-              solid ? "text-foreground/75 hover:text-primary" : "text-white/85 hover:text-white"
-            )}
-          >
-            List your property
-          </Link>
-          <Link
-            to="/browse"
+            to="/login"
             className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-[0_8px_24px_-12px_color-mix(in_oklab,var(--primary)_60%,transparent)] transition-transform hover:-translate-y-0.5"
           >
-            Explore
+            Login
           </Link>
         </div>
 
@@ -98,8 +90,9 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           <div className="container-x flex flex-col gap-1 py-4">
             {nav.map((n) => (
               <Link
-                key={n.to}
-                to={n.to}
+                key={n.label}
+                to={n.to as never}
+                params={n.params as never}
                 onClick={() => setOpen(false)}
                 className="rounded-lg px-3 py-3 text-sm font-medium text-foreground/80 hover:bg-muted"
               >
@@ -107,15 +100,16 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
               </Link>
             ))}
             <Link
-              to="/browse"
+              to="/login"
               onClick={() => setOpen(false)}
               className="mt-2 rounded-full bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground"
             >
-              Explore listings
+              Login
             </Link>
           </div>
         </div>
       )}
+
     </header>
   );
 }
