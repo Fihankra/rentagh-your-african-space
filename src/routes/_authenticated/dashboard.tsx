@@ -360,6 +360,7 @@ function DashboardPage() {
         )}
 
 
+        {isAdmin && (
         <section className="mt-12">
           <h2 className="font-display text-xl font-semibold text-foreground">Your listings</h2>
           {isLoading ? (
