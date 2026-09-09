@@ -12,4 +12,8 @@ export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
   },
+  // Lovable/local builds default to Cloudflare (cloudflare-module). When Vercel
+  // runs the build it sets VERCEL=1 — hard-pin Nitro's vercel preset then so the
+  // output matches Vercel's Build Output API, without touching the Cloudflare path.
+  nitro: process.env.VERCEL ? { preset: "vercel" } : undefined,
 });

@@ -5,6 +5,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Database } from "@/integrations/supabase/types";
 import type { Property, Landmark } from "./property";
 import type { CategorySlug } from "./categories";
+import { getOwnerContact, renderNotificationEmail, sendEmail } from "@/lib/notify";
 
 function getPublicClient() {
   const url = process.env.SUPABASE_URL ?? "";
@@ -15,14 +16,16 @@ function getPublicClient() {
   });
 }
 
-
 function numericOrNull(v: unknown): number | undefined {
   if (v === null || v === undefined || v === "") return undefined;
   const n = Number(v);
   return Number.isFinite(n) ? n : undefined;
 }
 
-function areaLabel(area_sqm: number | null | undefined, category: CategorySlug): string | undefined {
+function areaLabel(
+  area_sqm: number | null | undefined,
+  category: CategorySlug,
+): string | undefined {
   if (area_sqm == null) return undefined;
   if (category === "lands" || category === "farmlands") {
     if (area_sqm >= 4046) return `${(area_sqm / 4046).toFixed(2)} acres`;
@@ -42,7 +45,9 @@ async function fetchImages(supabase: any, ids: string[]) {
 }
 
 /** Average rating + review count per published listing, keyed by property id. */
-async function fetchRatings(supabase: any): Promise<Record<string, { avg: number; count: number }>> {
+async function fetchRatings(
+  supabase: any,
+): Promise<Record<string, { avg: number; count: number }>> {
   const { data, error } = await supabase.rpc("property_rating_summary");
   if (error) return {};
   const by: Record<string, { avg: number; count: number }> = {};
@@ -54,7 +59,10 @@ async function fetchRatings(supabase: any): Promise<Record<string, { avg: number
 
 function mapProperty(row: any, images: any[], landmarks: any[], reviews = 0, rating = 0): Property {
   const category = row.category as CategorySlug;
-  const gallery = [row.cover_url, ...images.map((i) => i.url).filter((u) => u && u !== row.cover_url)].filter(Boolean);
+  const gallery = [
+    row.cover_url,
+    ...images.map((i) => i.url).filter((u) => u && u !== row.cover_url),
+  ].filter(Boolean);
   const fallbackGallery = [row.cover_url].filter(Boolean);
   return {
     id: row.id,
@@ -135,8 +143,8 @@ export const listProperties = createServerFn({ method: "POST" })
         p.property_images ?? [],
         p.property_landmarks ?? [],
         ratings[p.id]?.count ?? 0,
-        ratings[p.id]?.avg ?? 0
-      )
+        ratings[p.id]?.avg ?? 0,
+      ),
     );
   });
 
@@ -158,7 +166,7 @@ export const getPropertyById = createServerFn({ method: "GET" })
       row.property_images ?? [],
       row.property_landmarks ?? [],
       ratings[row.id]?.count ?? 0,
-      ratings[row.id]?.avg ?? 0
+      ratings[row.id]?.avg ?? 0,
     );
   });
 
@@ -182,7 +190,9 @@ const createPropertySchema = z.object({
   amenities: z.array(z.string()).default([]),
   cover_url: z.string().optional(),
   images: z.array(z.object({ url: z.string(), sort_order: z.number() })).default([]),
-  landmarks: z.array(z.object({ name: z.string(), kind: z.string(), km: z.number(), mins: z.number() })).default([]),
+  landmarks: z
+    .array(z.object({ name: z.string(), kind: z.string(), km: z.number(), mins: z.number() }))
+    .default([]),
 });
 
 export const createProperty = createServerFn({ method: "POST" })
@@ -196,7 +206,6 @@ export const createProperty = createServerFn({ method: "POST" })
     if (!isAdmin) throw new Error("Only the administrator can add listings.");
     const status = data.status;
     const featured = data.featured;
-
 
     const { data: inserted, error } = await supabase
       .from("properties")
@@ -232,7 +241,7 @@ export const createProperty = createServerFn({ method: "POST" })
           property_id: inserted.id,
           url: img.url,
           sort_order: img.sort_order ?? i,
-        }))
+        })),
       );
     }
 
@@ -244,7 +253,7 @@ export const createProperty = createServerFn({ method: "POST" })
           kind: l.kind,
           km: l.km,
           mins: l.mins,
-        }))
+        })),
       );
     }
 
@@ -263,8 +272,6 @@ export const uploadPropertyImage = createServerFn({ method: "POST" })
     const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
     if (!isAdmin) throw new Error("Only the administrator can upload listing photos.");
 
-
-
     const file = data as File;
     const ext = file.name.split(".").pop() ?? "jpg";
     const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
@@ -282,7 +289,6 @@ export const uploadPropertyImage = createServerFn({ method: "POST" })
       .createSignedUrl(path, 60 * 60 * 24 * 3650);
     if (signError) throw new Error(signError.message);
     return { url: urlData.signedUrl };
-
   });
 
 export const listCategoryMetadata = createServerFn({ method: "GET" }).handler(async () => {
@@ -297,9 +303,14 @@ export const listCategoryMetadata = createServerFn({ method: "GET" }).handler(as
 
 export const updateCategoryMetadata = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { slug: string; label: string; tagline: string; sort_order: number }) => data)
+  .inputValidator(
+    (data: { slug: string; label: string; tagline: string; sort_order: number }) => data,
+  )
   .handler(async ({ data, context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
     if (!isAdmin) throw new Error("Forbidden");
 
     const { error } = await context.supabase
@@ -328,7 +339,10 @@ export const getMyProperties = createServerFn({ method: "GET" })
 export const adminListProperties = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
     if (!isAdmin) throw new Error("Forbidden");
 
     const { data, error } = await context.supabase
@@ -339,13 +353,7 @@ export const adminListProperties = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
 
     return (data ?? []).map((p: any) =>
-      mapProperty(
-        p,
-        p.property_images ?? [],
-        p.property_landmarks ?? [],
-        0,
-        0
-      )
+      mapProperty(p, p.property_images ?? [], p.property_landmarks ?? [], 0, 0),
     );
   });
 
@@ -353,8 +361,17 @@ export const adminUpdatePropertyStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: { id: string; status: string; featured: boolean }) => data)
   .handler(async ({ data, context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
     if (!isAdmin) throw new Error("Forbidden");
+
+    const { data: existing } = await context.supabase
+      .from("properties")
+      .select("user_id, title, status")
+      .eq("id", data.id)
+      .maybeSingle();
 
     const { error } = await context.supabase
       .from("properties")
@@ -362,6 +379,21 @@ export const adminUpdatePropertyStatus = createServerFn({ method: "POST" })
       .eq("id", data.id);
 
     if (error) throw new Error(error.message);
+
+    if (existing && existing.status !== "published" && data.status === "published") {
+      const owner = await getOwnerContact(existing.user_id);
+      if (owner.email) {
+        await sendEmail(
+          owner.email,
+          `Your listing is live: ${existing.title}`,
+          renderNotificationEmail(
+            "Your listing is now published",
+            `<p><strong>${existing.title}</strong> is now live on RentaGh and visible to everyone browsing the site.</p>`,
+          ),
+        );
+      }
+    }
+
     return { ok: true };
   });
 
@@ -405,7 +437,11 @@ export const getMyProperty = createServerFn({ method: "POST" })
       .maybeSingle();
     if (error) throw new Error(error.message);
     if (!row) return null;
-    return mapProperty(row, (row as any).property_images ?? [], (row as any).property_landmarks ?? []);
+    return mapProperty(
+      row,
+      (row as any).property_images ?? [],
+      (row as any).property_landmarks ?? [],
+    );
   });
 
 export const updateMyProperty = createServerFn({ method: "POST" })
@@ -413,9 +449,11 @@ export const updateMyProperty = createServerFn({ method: "POST" })
   .inputValidator((data) => updatePropertySchema.parse(data))
   .handler(async ({ data, context }) => {
     const supabase = context.supabase;
-    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    const { data: isAdmin } = await supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
     if (!isAdmin) throw new Error("Only the administrator can edit listings.");
-
 
     const { data: existing, error: readError } = await supabase
       .from("properties")
@@ -427,7 +465,10 @@ export const updateMyProperty = createServerFn({ method: "POST" })
     if (existing.user_id !== context.userId && !isAdmin) throw new Error("Forbidden");
 
     // Only admins may move a listing into the published state.
-    const status = data.status === "published" && !isAdmin && existing.status !== "published" ? "draft" : data.status;
+    const status =
+      data.status === "published" && !isAdmin && existing.status !== "published"
+        ? "draft"
+        : data.status;
 
     const { error } = await supabase
       .from("properties")
@@ -453,9 +494,15 @@ export const updateMyProperty = createServerFn({ method: "POST" })
 
     if (data.images.length) {
       await supabase.from("property_images").delete().eq("property_id", data.id);
-      await supabase.from("property_images").insert(
-        data.images.map((img, i) => ({ property_id: data.id, url: img.url, sort_order: img.sort_order ?? i }))
-      );
+      await supabase
+        .from("property_images")
+        .insert(
+          data.images.map((img, i) => ({
+            property_id: data.id,
+            url: img.url,
+            sort_order: img.sort_order ?? i,
+          })),
+        );
     }
 
     return { id: data.id, status };
@@ -465,7 +512,10 @@ export const deleteMyProperty = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: { id: string }) => data)
   .handler(async ({ data, context }) => {
-    const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
     if (!isAdmin) throw new Error("Only the administrator can delete listings.");
     const { error } = await context.supabase.from("properties").delete().eq("id", data.id);
     if (error) throw new Error(error.message);

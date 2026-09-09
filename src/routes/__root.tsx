@@ -85,9 +85,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content: "Verified student hostels, houses for rent, building and farm lands across Ghana.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "/og-image.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "/og-image.png" },
     ],
     links: [
+      { rel: "icon", type: "image/png", href: "/logo-icon.png" },
+      { rel: "apple-touch-icon", href: "/logo-icon.png" },
       {
         rel: "stylesheet",
         href: appCss,
@@ -108,7 +114,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap",
       },
     ],
-
   }),
   shellComponent: RootShell,
   component: RootComponent,

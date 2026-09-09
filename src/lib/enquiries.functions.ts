@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Database } from "@/integrations/supabase/types";
+import { getOwnerContact, renderNotificationEmail, sendEmail, sendSms } from "@/lib/notify";
 
 function getPublicClient() {
   const url = process.env.SUPABASE_URL ?? "";
@@ -30,7 +31,7 @@ export const sendEnquiry = createServerFn({ method: "POST" })
     // Only published listings can receive enquiries; owner is resolved server-side.
     const { data: property, error: readError } = await supabase
       .from("properties")
-      .select("id, user_id, status")
+      .select("id, user_id, status, title")
       .eq("id", data.propertyId)
       .eq("status", "published")
       .maybeSingle();
@@ -47,6 +48,27 @@ export const sendEnquiry = createServerFn({ method: "POST" })
     });
     if (error) throw new Error(error.message);
 
+    const propertyTitle = (property as { title?: string }).title ?? "your listing";
+    const owner = await getOwnerContact(property.user_id);
+    if (owner.email) {
+      await sendEmail(
+        owner.email,
+        `New enquiry: ${propertyTitle}`,
+        renderNotificationEmail(
+          "You have a new enquiry",
+          `<p><strong>${data.name.trim()}</strong> is interested in <strong>${propertyTitle}</strong>.</p><p style="margin-top:12px;white-space:pre-wrap;">${data.message.trim()}</p>`,
+          undefined,
+          "Open inbox",
+        ),
+      );
+    }
+    if (owner.phone) {
+      await sendSms(
+        owner.phone,
+        `RentaGh: New enquiry from ${data.name.trim()} about "${propertyTitle}". Check your dashboard inbox.`,
+      );
+    }
+
     return { ok: true };
   });
 
@@ -57,7 +79,7 @@ export const listMyEnquiries = createServerFn({ method: "GET" })
     const { data, error } = await context.supabase
       .from("enquiries")
       .select(
-        "id, property_id, name, email, phone, message, status, created_at, properties(title), enquiry_replies(id, body, created_at)"
+        "id, property_id, name, email, phone, message, status, created_at, properties(title), enquiry_replies(id, body, created_at)",
       )
       .order("created_at", { ascending: false })
       .limit(100);
@@ -73,7 +95,11 @@ export const listMyEnquiries = createServerFn({ method: "GET" })
       status: e.status as string,
       createdAt: e.created_at as string,
       replies: ((e.enquiry_replies ?? []) as any[])
-        .map((r) => ({ id: r.id as string, body: r.body as string, createdAt: r.created_at as string }))
+        .map((r) => ({
+          id: r.id as string,
+          body: r.body as string,
+          createdAt: r.created_at as string,
+        }))
         .sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
     }));
   });
@@ -82,7 +108,7 @@ export const listMyEnquiries = createServerFn({ method: "GET" })
 export const replyToEnquiry = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) =>
-    z.object({ id: z.string().uuid(), body: z.string().min(2).max(2000) }).parse(data)
+    z.object({ id: z.string().uuid(), body: z.string().min(2).max(2000) }).parse(data),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
@@ -91,6 +117,25 @@ export const replyToEnquiry = createServerFn({ method: "POST" })
       .insert({ enquiry_id: data.id, owner_id: userId, body: data.body.trim() });
     if (error) throw new Error(error.message);
     await supabase.from("enquiries").update({ status: "replied" }).eq("id", data.id);
+
+    const { data: enquiry } = await supabase
+      .from("enquiries")
+      .select("email, name, properties(title)")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (enquiry?.email) {
+      const propertyTitle =
+        (enquiry.properties as { title?: string } | null)?.title ?? "your enquiry";
+      await sendEmail(
+        enquiry.email,
+        `RentaGh: reply to your enquiry about ${propertyTitle}`,
+        renderNotificationEmail(
+          "The owner replied",
+          `<p>Hi ${enquiry.name ?? "there"}, you have a reply about <strong>${propertyTitle}</strong>:</p><p style="margin-top:12px;white-space:pre-wrap;">${data.body.trim()}</p>`,
+        ),
+      );
+    }
+
     return { ok: true };
   });
 
