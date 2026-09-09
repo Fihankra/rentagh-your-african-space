@@ -1,3 +1,4 @@
+import type { Property } from "./property";
 import type { CategorySlug } from "./categories";
 import villa from "@/assets/hero-villa.jpg";
 import home from "@/assets/cat-home.jpg";
@@ -6,33 +7,8 @@ import hostel from "@/assets/cat-hostel.jpg";
 import land from "@/assets/cat-land.jpg";
 import farm from "@/assets/cat-farmland.jpg";
 
-export type Landmark = { name: string; kind: string; km: number; mins: number };
-
-export type Property = {
-  id: string;
-  title: string;
-  category: CategorySlug;
-  city: string;
-  region: string;
-  neighborhood: string;
-  priceGHS: number;
-  priceUnit: "night" | "month" | "total" | "year";
-  beds?: number;
-  baths?: number;
-  area?: string;
-  verified: boolean;
-  featured?: boolean;
-  rating: number;
-  reviews: number;
-  cover: string;
-  gallery: string[];
-  hostName: string;
-  hostRole: string;
-  description: string;
-  amenities: string[];
-  coords: { lat: number; lng: number };
-  landmarks: Landmark[];
-};
+export type { Property, Landmark } from "./property";
+export { formatGHS, priceLabel } from "./property";
 
 const cycle = [villa, apt, home, hostel, land, farm];
 const galleryFor = (cover: string, n = 5) => {
@@ -40,7 +16,7 @@ const galleryFor = (cover: string, n = 5) => {
   return [cover, ...others.slice(0, n - 1)];
 };
 
-const landmarksAccra: Landmark[] = [
+const landmarksAccra = [
   { name: "Ridge Hospital", kind: "Hospital", km: 1.4, mins: 6 },
   { name: "Achimota School", kind: "School", km: 3.1, mins: 12 },
   { name: "Accra Mall", kind: "Mall", km: 4.8, mins: 15 },
@@ -49,7 +25,7 @@ const landmarksAccra: Landmark[] = [
   { name: "Tetteh Quarshie Interchange", kind: "Transport", km: 2.4, mins: 8 },
   { name: "Holy Trinity Cathedral", kind: "Church", km: 1.8, mins: 7 },
 ];
-const landmarksKumasi: Landmark[] = [
+const landmarksKumasi = [
   { name: "KNUST Main Gate", kind: "University", km: 2.2, mins: 9 },
   { name: "Komfo Anokye Hospital", kind: "Hospital", km: 3.5, mins: 14 },
   { name: "Kejetia Market", kind: "Market", km: 4.1, mins: 16 },
@@ -57,7 +33,7 @@ const landmarksKumasi: Landmark[] = [
   { name: "Total Fuel Station", kind: "Fuel", km: 0.8, mins: 4 },
   { name: "Ecobank Adum", kind: "Bank", km: 2.0, mins: 8 },
 ];
-const landmarksCoast: Landmark[] = [
+const landmarksCoast = [
   { name: "University of Cape Coast", kind: "University", km: 1.2, mins: 5 },
   { name: "Cape Coast Castle", kind: "Landmark", km: 6.5, mins: 18 },
   { name: "Police Headquarters", kind: "Police", km: 2.1, mins: 8 },
@@ -68,7 +44,7 @@ export const properties: Property[] = [
   {
     id: "knust-hostel-suite",
     title: "KNUST Garden Hostel — Twin Suite",
-    category: "hostels",
+    category: "hostels" as CategorySlug,
     city: "Kumasi",
     region: "Ashanti",
     neighborhood: "Ayeduase",
@@ -86,7 +62,7 @@ export const properties: Property[] = [
   {
     id: "legon-hostel-ensuite",
     title: "Legon Court Hostel — Single En-suite",
-    category: "hostels",
+    category: "hostels" as CategorySlug,
     city: "Accra",
     region: "Greater Accra",
     neighborhood: "East Legon",
@@ -104,7 +80,7 @@ export const properties: Property[] = [
   {
     id: "ucc-hostel-fourbed",
     title: "Amamoma Student Hostel — 4-in-a-Room",
-    category: "hostels",
+    category: "hostels" as CategorySlug,
     city: "Cape Coast",
     region: "Central",
     neighborhood: "Amamoma",
@@ -122,7 +98,7 @@ export const properties: Property[] = [
   {
     id: "ridge-emerald-villa",
     title: "Emerald Ridge Villa with Infinity Pool",
-    category: "homes",
+    category: "homes" as CategorySlug,
     city: "Accra",
     region: "Greater Accra",
     neighborhood: "Cantonments",
@@ -140,7 +116,7 @@ export const properties: Property[] = [
   {
     id: "east-legon-family-house",
     title: "3-Bedroom House for Rent, East Legon",
-    category: "homes",
+    category: "homes" as CategorySlug,
     city: "Accra",
     region: "Greater Accra",
     neighborhood: "East Legon",
@@ -158,7 +134,7 @@ export const properties: Property[] = [
   {
     id: "tema-family-home",
     title: "4-Bedroom Family House, Tema Comm. 25",
-    category: "homes",
+    category: "homes" as CategorySlug,
     city: "Tema",
     region: "Greater Accra",
     neighborhood: "Community 25",
@@ -176,7 +152,7 @@ export const properties: Property[] = [
   {
     id: "kumasi-ahodwo-house",
     title: "2-Bedroom House for Rent, Ahodwo",
-    category: "homes",
+    category: "homes" as CategorySlug,
     city: "Kumasi",
     region: "Ashanti",
     neighborhood: "Ahodwo",
@@ -194,7 +170,7 @@ export const properties: Property[] = [
   {
     id: "takoradi-beach-house",
     title: "3-Bedroom House for Rent, Airport Ridge",
-    category: "homes",
+    category: "homes" as CategorySlug,
     city: "Takoradi",
     region: "Western",
     neighborhood: "Airport Ridge",
@@ -212,7 +188,7 @@ export const properties: Property[] = [
   {
     id: "aburi-hill-land",
     title: "1.2 Acre Hilltop Building Plot, Aburi",
-    category: "lands",
+    category: "lands" as CategorySlug,
     city: "Aburi",
     region: "Eastern",
     neighborhood: "Aburi Hills",
@@ -235,7 +211,7 @@ export const properties: Property[] = [
   {
     id: "oyibi-building-plot",
     title: "Registered Building Plot, Oyibi",
-    category: "lands",
+    category: "lands" as CategorySlug,
     city: "Oyibi",
     region: "Greater Accra",
     neighborhood: "Oyibi",
@@ -253,7 +229,7 @@ export const properties: Property[] = [
   {
     id: "ejisu-storage-yard-land",
     title: "Half-Acre Yard for Rent, Ejisu Roadside",
-    category: "lands",
+    category: "lands" as CategorySlug,
     city: "Ejisu",
     region: "Ashanti",
     neighborhood: "Ejisu",
@@ -271,7 +247,7 @@ export const properties: Property[] = [
   {
     id: "ejisu-cocoa-farm",
     title: "18-Acre Cocoa Farm Land, Ejisu",
-    category: "farmlands",
+    category: "farmlands" as CategorySlug,
     city: "Ejisu",
     region: "Ashanti",
     neighborhood: "Ejisu",
@@ -289,7 +265,7 @@ export const properties: Property[] = [
   {
     id: "afram-plains-farmland",
     title: "25-Acre Arable Farm Land for Hire, Afram Plains",
-    category: "farmlands",
+    category: "farmlands" as CategorySlug,
     city: "Donkorkrom",
     region: "Eastern",
     neighborhood: "Afram Plains",
@@ -319,18 +295,4 @@ export const regions = [
 
 export function getProperty(id: string) {
   return properties.find((p) => p.id === id);
-}
-
-export function formatGHS(n: number) {
-  return new Intl.NumberFormat("en-GH", { style: "currency", currency: "GHS", maximumFractionDigits: 0 }).format(n);
-}
-
-export function priceLabel(p: Property) {
-  const v = formatGHS(p.priceGHS);
-  switch (p.priceUnit) {
-    case "night": return `${v} / night`;
-    case "month": return `${v} / month`;
-    case "year": return `${v} / year`;
-    default: return v;
-  }
 }

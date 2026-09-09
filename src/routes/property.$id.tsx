@@ -3,14 +3,17 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Gallery } from "@/components/property/Gallery";
 import { MapPlaceholder } from "@/components/property/MapPlaceholder";
-import { getProperty, priceLabel, type Property } from "@/lib/mock-properties";
+import { getProperty as getMockProperty } from "@/lib/mock-properties";
+import { getPropertyById } from "@/lib/properties.functions";
 import { categoryLabel } from "@/lib/categories";
+import { priceLabel, type Property } from "@/lib/property";
 import { BadgeCheck, MapPin, Star, BedDouble, Bath, Ruler, Wifi, ShieldCheck, ArrowRight, Hospital, GraduationCap, ShoppingBag, Fuel, Landmark as LandmarkIcon, Building2 } from "lucide-react";
 
 export const Route = createFileRoute("/property/$id")({
   component: PropertyPage,
-  loader: ({ params }) => {
-    const p = getProperty(params.id);
+  loader: async ({ params }) => {
+    const live = await getPropertyById({ data: { id: params.id } });
+    const p = live ?? getMockProperty(params.id);
     if (!p) throw notFound();
     return { p };
   },
