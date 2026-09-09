@@ -11,7 +11,7 @@ export interface SupabaseAuthContext {
 
 export const requireSupabaseAuth = createMiddleware().server(async ({ next, request }) => {
   const url = process.env.SUPABASE_URL ?? "";
-  const key = process.env.SUPABASE_PUBLISHABLE_KEY ?? "";
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY ?? "";
 
   if (!url || !key) {
     throw new Response("Supabase not configured", { status: 500 });
