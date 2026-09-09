@@ -4,6 +4,13 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 import { BrowseGrid } from "@/components/browse/BrowseGrid";
 import { categories, type CategorySlug } from "@/lib/categories";
 
+const categoryDescriptions: Record<CategorySlug, string> = {
+  hostels: "Verified student hostels near KNUST, Legon, UCC and other Ghanaian campuses — single, twin and shared rooms with clear yearly fees.",
+  homes: "Houses for rent across Accra, Kumasi, Tema and Takoradi — verified landlords and agents, with monthly rent shown upfront.",
+  lands: "Building lands for rent and for sale in Ghana — surveyed, litigation-free plots with indentures and site plans.",
+  farmlands: "Farm lands for rent and for sale in Ghana — arable acreage, cocoa farms and irrigated plots with road access.",
+};
+
 export const Route = createFileRoute("/browse/$category")({
   component: CategoryPage,
   loader: ({ params }) => {
