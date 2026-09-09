@@ -8,6 +8,7 @@ import { categories } from "@/lib/categories";
 import { getMyProperty, updateMyProperty, deleteMyProperty } from "@/lib/properties.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth";
 
 const regions = [
   "Greater Accra", "Ashanti", "Western", "Eastern", "Central", "Northern", "Volta",
