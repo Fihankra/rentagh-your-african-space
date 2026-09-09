@@ -14,16 +14,271 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      category_metadata: {
+        Row: {
+          created_at: string
+          icon: string
+          id: string
+          label: string
+          slug: Database["public"]["Enums"]["property_category"]
+          sort_order: number
+          tagline: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          icon?: string
+          id?: string
+          label: string
+          slug: Database["public"]["Enums"]["property_category"]
+          sort_order?: number
+          tagline: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          icon?: string
+          id?: string
+          label?: string
+          slug?: Database["public"]["Enums"]["property_category"]
+          sort_order?: number
+          tagline?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      properties: {
+        Row: {
+          amenities: string[]
+          area_sqm: number | null
+          baths: number | null
+          beds: number | null
+          category: Database["public"]["Enums"]["property_category"]
+          city: string
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          details: Json | null
+          featured: boolean
+          id: string
+          lat: number | null
+          listing_type: Database["public"]["Enums"]["listing_type"]
+          lng: number | null
+          neighborhood: string | null
+          owner_display_name: string | null
+          owner_role: string | null
+          price: number
+          price_period: Database["public"]["Enums"]["price_period"] | null
+          region: string
+          status: Database["public"]["Enums"]["property_status"]
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amenities?: string[]
+          area_sqm?: number | null
+          baths?: number | null
+          beds?: number | null
+          category: Database["public"]["Enums"]["property_category"]
+          city: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          details?: Json | null
+          featured?: boolean
+          id?: string
+          lat?: number | null
+          listing_type?: Database["public"]["Enums"]["listing_type"]
+          lng?: number | null
+          neighborhood?: string | null
+          owner_display_name?: string | null
+          owner_role?: string | null
+          price: number
+          price_period?: Database["public"]["Enums"]["price_period"] | null
+          region: string
+          status?: Database["public"]["Enums"]["property_status"]
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amenities?: string[]
+          area_sqm?: number | null
+          baths?: number | null
+          beds?: number | null
+          category?: Database["public"]["Enums"]["property_category"]
+          city?: string
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          details?: Json | null
+          featured?: boolean
+          id?: string
+          lat?: number | null
+          listing_type?: Database["public"]["Enums"]["listing_type"]
+          lng?: number | null
+          neighborhood?: string | null
+          owner_display_name?: string | null
+          owner_role?: string | null
+          price?: number
+          price_period?: Database["public"]["Enums"]["price_period"] | null
+          region?: string
+          status?: Database["public"]["Enums"]["property_status"]
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      property_images: {
+        Row: {
+          created_at: string
+          id: string
+          property_id: string
+          sort_order: number
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          property_id: string
+          sort_order?: number
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          property_id?: string
+          sort_order?: number
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_images_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      property_landmarks: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          km: number
+          mins: number
+          name: string
+          property_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          km?: number
+          mins?: number
+          name: string
+          property_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          km?: number
+          mins?: number
+          name?: string
+          property_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_landmarks_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      claim_first_admin: { Args: never; Returns: boolean }
+      count_properties_by_category: {
+        Args: never
+        Returns: {
+          category: Database["public"]["Enums"]["property_category"]
+          count: number
+        }[]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      listing_type: "rent" | "sale"
+      price_period: "night" | "month" | "year" | "total"
+      property_category: "hostels" | "homes" | "lands" | "farmlands"
+      property_status: "draft" | "published" | "archived"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +405,12 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      listing_type: ["rent", "sale"],
+      price_period: ["night", "month", "year", "total"],
+      property_category: ["hostels", "homes", "lands", "farmlands"],
+      property_status: ["draft", "published", "archived"],
+    },
   },
 } as const
