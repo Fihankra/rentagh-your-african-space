@@ -2,15 +2,19 @@ import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { Database } from "@/integrations/supabase/types";
 import type { Property, Landmark } from "./property";
 import type { CategorySlug } from "./categories";
 
 function getPublicClient() {
   const url = process.env.SUPABASE_URL ?? "";
-  const key = process.env.SUPABASE_PUBLISHABLE_KEY ?? "";
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY ?? "";
   if (!url || !key) throw new Error("Supabase not configured");
-  return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+  return createClient<Database>(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
 }
+
 
 function numericOrNull(v: unknown): number | undefined {
   if (v === null || v === undefined || v === "") return undefined;
