@@ -119,6 +119,6 @@ export const adminStats = createServerFn({ method: "GET" })
       properties: propertiesCount ?? 0,
       users: usersCount ?? 0,
       admins: adminsCount ?? 0,
-      byCategory: byCategory ?? [],
+      byCategory: (byCategory ?? []) as any[],
     };
   });
