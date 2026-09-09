@@ -75,7 +75,11 @@ function PropertyPage() {
           <div>
             <h1 className="font-display text-4xl font-semibold text-foreground md:text-5xl">{p.title}</h1>
             <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1"><Star className="h-4 w-4 fill-[color:var(--accent)] text-[color:var(--accent)]" /> {p.rating} · {p.reviews} reviews</span>
+              {p.reviews > 0 ? (
+                <span className="flex items-center gap-1"><Star className="h-4 w-4 fill-[color:var(--accent)] text-[color:var(--accent)]" /> {p.rating} · {p.reviews} {p.reviews === 1 ? "review" : "reviews"}</span>
+              ) : (
+                <span>New listing</span>
+              )}
               <span className="flex items-center gap-1"><MapPin className="h-4 w-4" /> {p.neighborhood}, {p.city}</span>
               {p.verified && <span className="flex items-center gap-1 text-primary"><BadgeCheck className="h-4 w-4" /> Verified by RentaGh</span>}
             </div>
@@ -165,7 +169,11 @@ function PropertyPage() {
               <div className="flex items-baseline justify-between">
                 <div className="font-display text-3xl font-semibold text-foreground">{priceLabel(p)}</div>
                 <div className="flex items-center gap-1 text-sm text-foreground/70">
-                  <Star className="h-4 w-4 fill-[color:var(--accent)] text-[color:var(--accent)]" /> {p.rating}
+                  {p.reviews > 0 && (
+                    <>
+                      <Star className="h-4 w-4 fill-[color:var(--accent)] text-[color:var(--accent)]" /> {p.rating}
+                    </>
+                  )}
                 </div>
               </div>
 
