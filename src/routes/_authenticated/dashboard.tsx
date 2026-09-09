@@ -433,8 +433,9 @@ function DashboardPage() {
             </div>
           )}
         </section>
+        )}
 
-        <EnquiriesInbox />
+        {isAdmin && <EnquiriesInbox />}
       </main>
       <SiteFooter />
     </>
