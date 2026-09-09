@@ -193,8 +193,10 @@ export const createProperty = createServerFn({ method: "POST" })
     const userId = context.userId;
 
     const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
-    const status = (data.status === "published" || data.featured) && !isAdmin ? "draft" : data.status;
-    const featured = data.featured && isAdmin ? true : false;
+    if (!isAdmin) throw new Error("Only the administrator can add listings.");
+    const status = data.status;
+    const featured = data.featured;
+
 
     const { data: inserted, error } = await supabase
       .from("properties")
