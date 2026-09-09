@@ -414,6 +414,8 @@ export const updateMyProperty = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const supabase = context.supabase;
     const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+    if (!isAdmin) throw new Error("Only the administrator can edit listings.");
+
 
     const { data: existing, error: readError } = await supabase
       .from("properties")
