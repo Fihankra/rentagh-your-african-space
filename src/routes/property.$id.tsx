@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Gallery } from "@/components/property/Gallery";
 import { MapPlaceholder } from "@/components/property/MapPlaceholder";
+import { Reviews } from "@/components/property/Reviews";
 import { EnquiryForm } from "@/components/property/EnquiryForm";
 import { getPropertyById } from "@/lib/properties.functions";
 import { categoryLabel } from "@/lib/categories";
@@ -154,6 +155,8 @@ function PropertyPage() {
                 })}
               </ul>
             </div>
+
+            <Reviews propertyId={p.id} />
           </div>
 
           {/* inquiry sidebar */}
