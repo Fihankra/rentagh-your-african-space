@@ -9,6 +9,7 @@ import { listMyEnquiries, updateEnquiryStatus, replyToEnquiry } from "@/lib/enqu
 import { getOnboardingState } from "@/lib/admin.functions";
 import { priceLabel, type Property } from "@/lib/property";
 import { categoryLabel } from "@/lib/categories";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardPage,
