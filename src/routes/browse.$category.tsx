@@ -13,13 +13,17 @@ export const Route = createFileRoute("/browse/$category")({
   },
   head: ({ loaderData, params }) => {
     const label = loaderData?.cat.label ?? "Properties";
+    const blurb = categoryDescriptions[params.category as CategorySlug] ??
+      `Browse verified ${label.toLowerCase()} across Ghana on RentaGh.`;
     return {
       meta: [
         { title: `${label} in Ghana — RentaGh` },
-        { name: "description", content: `Browse verified ${label.toLowerCase()} across Ghana on RentaGh.` },
-        { property: "og:title", content: `${label} — RentaGh` },
-        { property: "og:description", content: `Verified ${label.toLowerCase()} across Ghana.` },
+        { name: "description", content: blurb },
+        { property: "og:title", content: `${label} in Ghana — RentaGh` },
+        { property: "og:description", content: blurb },
+        { property: "og:type", content: "website" },
         { property: "og:url", content: `/browse/${params.category}` },
+        { name: "twitter:card", content: "summary_large_image" },
       ],
       links: [{ rel: "canonical", href: `/browse/${params.category}` }],
     };
