@@ -2,7 +2,7 @@ import { Star } from "lucide-react";
 import { SectionHeading } from "./SectionHeading";
 
 const t = [
-  { name: "Akosua D.", role: "Renter · Accra", body: "Found a verified apartment in East Legon in two days. The host was on RentaGh's verified list — the move was seamless.", rating: 5 },
+  { name: "Akosua D.", role: "Renter · Accra", body: "Found a verified house for rent in East Legon in two days. The owner was on RentaGh's verified list — the move was seamless.", rating: 5 },
   { name: "Ibrahim K.", role: "KNUST student", body: "I booked my hostel from Tamale before even arriving in Kumasi. Photos matched, security was real, Wi-Fi was fast.", rating: 5 },
   { name: "Yaa O.", role: "Property developer", body: "The premium listing tools and verification flow finally made my Trasacco units look the way they deserve.", rating: 5 },
 ];

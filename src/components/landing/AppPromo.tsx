@@ -12,7 +12,7 @@ export function AppPromo() {
                 RentaGh in your pocket. <span className="italic text-[color:var(--accent)]">Always.</span>
               </h2>
               <p className="mt-4 max-w-md text-white/70">
-                Save searches, book stays, pay with Mobile Money, and chat with verified hosts — anywhere in Ghana, anytime.
+                Save searches, secure a hostel room, house or land, pay with Mobile Money, and chat with verified owners — anywhere in Ghana.
               </p>
               <ul className="mt-8 grid gap-3 text-sm text-white/80">
                 <li className="flex items-center gap-3"><ShieldCheck className="h-4 w-4 text-[color:var(--accent)]" /> Verified hosts & properties</li>

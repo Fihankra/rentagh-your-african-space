@@ -6,8 +6,9 @@ import { cn } from "@/lib/utils";
 
 const nav: { to: string; params?: Record<string, string>; label: string }[] = [
   { to: "/browse/$category", params: { category: "homes" }, label: "Houses" },
-  { to: "/browse/$category", params: { category: "hostels" }, label: "Hostel" },
+  { to: "/browse/$category", params: { category: "hostels" }, label: "Hostels" },
   { to: "/browse/$category", params: { category: "lands" }, label: "Lands" },
+  { to: "/browse/$category", params: { category: "farmlands" }, label: "Farm Lands" },
   { to: "/terms", label: "Terms & Conditions" },
   { to: "/faqs", label: "FAQs" },
   { to: "/contact", label: "Contact Us" },

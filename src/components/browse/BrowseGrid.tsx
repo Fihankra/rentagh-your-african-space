@@ -31,7 +31,7 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
           <p className="mt-2 text-muted-foreground">{list.length} listings · across Ghana</p>
         </div>
         <input
-          placeholder="Search neighborhoods, cities…"
+          placeholder="Search hostels, houses, lands, cities…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="h-12 w-full rounded-full border hairline bg-card px-5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 md:w-80"
