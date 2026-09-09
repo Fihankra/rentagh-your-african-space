@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, Home, MapPin, Settings, Shield, Pencil, Trash2, Eye, Mail, Phone } from "lucide-react";
+import { Plus, Home, MapPin, Settings, Shield, Pencil, Trash2, Eye, Mail, Phone, MessageSquare, Send } from "lucide-react";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { getMyProperties, claimFirstAdmin, deleteMyProperty } from "@/lib/properties.functions";
-import { listMyEnquiries, updateEnquiryStatus } from "@/lib/enquiries.functions";
+import { listMyEnquiries, updateEnquiryStatus, replyToEnquiry } from "@/lib/enquiries.functions";
 import { getOnboardingState } from "@/lib/admin.functions";
 import { priceLabel, type Property } from "@/lib/property";
 import { categoryLabel } from "@/lib/categories";
