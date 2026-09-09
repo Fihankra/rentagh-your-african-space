@@ -24,7 +24,7 @@ export const requireSupabaseAuth = createMiddleware().server(async ({ next, requ
     throw new Response("Unauthorized", { status: 401 });
   }
 
-  const supabase = createClient(url, key, {
+  const supabase = createClient<Database>(url, key, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
