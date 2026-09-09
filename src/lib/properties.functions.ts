@@ -102,6 +102,9 @@ export const listProperties = createServerFn({ method: "POST" })
 
     if (data.category !== "all") q = q.eq("category", data.category);
     if (data.region !== "All regions") q = q.eq("region", data.region);
+    if (data.listingType !== "all") q = q.eq("listing_type", data.listingType);
+    if (typeof data.minPrice === "number") q = q.gte("price", data.minPrice);
+    if (typeof data.maxPrice === "number") q = q.lte("price", data.maxPrice);
 
     const { data: rows, error } = await q;
     if (error) throw new Error(error.message);
