@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { PropertyCard } from "@/components/site/PropertyCard";
-import { properties as fallbackProperties } from "@/lib/mock-properties";
 import { listProperties } from "@/lib/properties.functions";
 import { categories, type CategorySlug } from "@/lib/categories";
 import { cn } from "@/lib/utils";
@@ -14,14 +13,11 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
   const [region, setRegion] = useState<(typeof regions)[number]>("All regions");
   const [query, setQuery] = useState("");
 
-  const { data: live = [], isLoading } = useQuery({
+  const { data: source = [], isLoading } = useQuery({
     queryKey: ["properties"],
-    queryFn: () => listProperties(),
+    queryFn: () => listProperties({ data: {} }),
     staleTime: 60_000,
   });
-
-  // Fall back to demo data while the connected database is empty.
-  const source = live.length ? live : fallbackProperties;
 
   const matchesQuery = (p: (typeof source)[number]) =>
     !query || `${p.title} ${p.city} ${p.neighborhood}`.toLowerCase().includes(query.toLowerCase());

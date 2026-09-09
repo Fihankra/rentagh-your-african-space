@@ -1,13 +1,21 @@
-import { properties } from "@/lib/mock-properties";
+import { useQuery } from "@tanstack/react-query";
 import { PropertyCard } from "@/components/site/PropertyCard";
+import { listProperties } from "@/lib/properties.functions";
 import { SectionHeading } from "./SectionHeading";
 import type { CategorySlug } from "@/lib/categories";
 
 export function CategorySpotlight({
   category, title, subtitle,
 }: { category: CategorySlug; title: string; subtitle: string }) {
-  const list = properties.filter((p) => p.category === category).slice(0, 3);
+  const { data = [] } = useQuery({
+    queryKey: ["properties"],
+    queryFn: () => listProperties({ data: {} }),
+    staleTime: 60_000,
+  });
+
+  const list = data.filter((p) => p.category === category).slice(0, 3);
   if (list.length === 0) return null;
+
   return (
     <section className="mt-24">
       <SectionHeading
