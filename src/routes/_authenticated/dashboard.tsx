@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { Plus, Home, MapPin, Settings } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Plus, Home, MapPin, Settings, Shield } from "lucide-react";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
-import { getMyProperties } from "@/lib/properties.functions";
+import { getMyProperties, claimFirstAdmin } from "@/lib/properties.functions";
+import { getOnboardingState } from "@/lib/admin.functions";
 import { priceLabel, type Property } from "@/lib/property";
 import { categoryLabel } from "@/lib/categories";
 
@@ -21,6 +22,56 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
     links: [{ rel: "canonical", href: "/dashboard" }],
   }),
 });
+
+function AdminOnboarding() {
+  const qc = useQueryClient();
+  const { data: state } = useQuery({ queryKey: ["onboarding"], queryFn: () => getOnboardingState() });
+
+  const claim = useMutation({
+    mutationFn: () => claimFirstAdmin({}),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["onboarding"] }),
+  });
+
+  if (!state) return null;
+
+  if (state.isAdmin) {
+    return (
+      <section className="mt-8 rounded-[24px] border hairline bg-card p-6">
+        <Shield className="h-6 w-6 text-emerald-600" />
+        <h2 className="mt-3 font-display text-xl font-semibold text-foreground">You are the administrator</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          You can review every listing and give administrator access to other people.
+        </p>
+        <Link
+          to="/admin"
+          className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+        >
+          Open admin dashboard
+        </Link>
+      </section>
+    );
+  }
+
+  if (state.adminExists) return null;
+
+  return (
+    <section className="mt-8 rounded-[24px] border hairline bg-card p-6">
+      <Shield className="h-6 w-6 text-gold" />
+      <h2 className="mt-3 font-display text-xl font-semibold text-foreground">Finish setting up RentaGh</h2>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Nobody manages this site yet. Take the administrator spot to approve listings and add other administrators.
+      </p>
+      <button
+        onClick={() => claim.mutate()}
+        disabled={claim.isPending}
+        className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-60"
+      >
+        {claim.isPending ? "Setting up…" : "Become the administrator"}
+      </button>
+      {claim.isError && <p className="mt-2 text-sm text-red-600">Could not complete that. Please try again.</p>}
+    </section>
+  );
+}
 
 function DashboardPage() {
   const { data: properties, isLoading } = useQuery({
@@ -45,6 +96,9 @@ function DashboardPage() {
             Add listing
           </Link>
         </div>
+
+        <AdminOnboarding />
+
 
         <section className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <div className="rounded-[24px] border hairline bg-card p-6">
