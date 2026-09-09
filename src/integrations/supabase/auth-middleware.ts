@@ -1,11 +1,13 @@
 import { createMiddleware } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
+import type { Database } from "./types";
 
 export interface SupabaseAuthContext {
   userId: string;
   email?: string;
-  supabase: ReturnType<typeof createClient>;
+  supabase: ReturnType<typeof createClient<Database>>;
 }
+
 
 export const requireSupabaseAuth = createMiddleware().server(async ({ next, request }) => {
   const url = process.env.SUPABASE_URL ?? "";
