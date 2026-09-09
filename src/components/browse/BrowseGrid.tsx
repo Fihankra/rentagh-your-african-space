@@ -94,7 +94,7 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
               region === r ? "bg-foreground text-background" : "bg-muted text-foreground/70 hover:bg-muted/70"
             )}
           >
-            {r}
+            {r} <span className="opacity-70">({regionCounts[r] ?? 0})</span>
           </button>
         ))}
       </div>
