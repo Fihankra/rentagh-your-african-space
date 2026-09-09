@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Search, MapPin, Calendar, Users } from "lucide-react";
+import { Search, MapPin, Users } from "lucide-react";
 import hero from "@/assets/hero-villa.jpg";
 
 export function Hero() {
