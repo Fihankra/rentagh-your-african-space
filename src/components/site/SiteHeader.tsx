@@ -1,19 +1,24 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Menu, X, User, LogOut, LayoutDashboard, Shield } from "lucide-react";
+import { Menu, X, User, LogOut, LayoutDashboard, Shield, ChevronDown } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { NotificationBell } from "@/components/site/NotificationBell";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const nav: { to: string; params?: Record<string, string>; label: string }[] = [
   { to: "/browse/$category", params: { category: "homes" }, label: "Houses" },
   { to: "/browse/$category", params: { category: "hostels" }, label: "Hostels" },
   { to: "/browse/$category", params: { category: "lands" }, label: "Lands" },
   { to: "/browse/$category", params: { category: "farmlands" }, label: "Farm Lands" },
-  { to: "/terms", label: "Terms & Conditions" },
-  { to: "/faqs", label: "FAQs" },
-  { to: "/contact", label: "Contact Us" },
 ];
 
 export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
@@ -36,7 +41,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
         solid
           ? "bg-background/85 backdrop-blur-md border-b hairline shadow-[0_1px_0_0_color-mix(in_oklab,var(--charcoal)_6%,transparent)]"
-          : "bg-transparent"
+          : "bg-transparent",
       )}
     >
       <div className="container-x flex h-16 items-center justify-between gap-6 md:h-20">
@@ -44,7 +49,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           to="/"
           className={cn(
             "flex items-center gap-2.5 rounded-full transition-colors",
-            solid ? "" : "bg-white/95 px-2.5 py-1 shadow-[0_4px_18px_-8px_rgba(0,0,0,0.35)]"
+            solid ? "" : "bg-white/95 px-2.5 py-1 shadow-[0_4px_18px_-8px_rgba(0,0,0,0.35)]",
           )}
         >
           <img src={logo} alt="RentaGh" className="h-8 w-auto md:h-10" />
@@ -58,7 +63,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
               params={n.params as never}
               className={cn(
                 "text-sm font-medium transition-colors",
-                solid ? "text-foreground/75 hover:text-primary" : "text-white/85 hover:text-white"
+                solid ? "text-foreground/75 hover:text-primary" : "text-white/85 hover:text-white",
               )}
               activeProps={{ className: solid ? "text-primary" : "text-white" }}
             >
@@ -69,37 +74,49 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
 
         <div className="hidden items-center gap-3 md:flex">
           {user ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <NotificationBell solid={solid} />
-              <Link
-                to="/dashboard"
-                className={cn(
-                  "flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors",
-                  solid ? "text-foreground/80 hover:bg-muted" : "text-white/90 hover:bg-white/10"
-                )}
-              >
-                <LayoutDashboard className="h-4 w-4" />
-                Dashboard
-              </Link>
-              {isAdmin && (
-                <Link
-                  to="/admin"
-                  className={cn(
-                    "flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors",
-                    solid ? "text-foreground/80 hover:bg-muted" : "text-white/90 hover:bg-white/10"
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className={cn(
+                      "flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                      solid
+                        ? "text-foreground/80 hover:bg-muted"
+                        : "text-white/90 hover:bg-white/10",
+                    )}
+                  >
+                    <User className="h-4 w-4" />
+                    {isAdmin ? "Admin" : "Account"}
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {user.email && (
+                    <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
                   )}
-                >
-                  <Shield className="h-4 w-4" />
-                  Admin
-                </Link>
-              )}
-              <button
-                onClick={() => signOut()}
-                className="flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-[0_8px_24px_-12px_color-mix(in_oklab,var(--primary)_60%,transparent)] transition-transform hover:-translate-y-0.5"
-              >
-                <LogOut className="h-4 w-4" />
-                Sign out
-              </button>
+                  <DropdownMenuSeparator />
+                  {isAdmin ? (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin">
+                        <Shield className="h-4 w-4" />
+                        Admin dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem asChild>
+                      <Link to="/dashboard">
+                        <LayoutDashboard className="h-4 w-4" />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    <LogOut className="h-4 w-4" />
+                    Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           ) : (
             <Link
@@ -116,7 +133,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           onClick={() => setOpen((s) => !s)}
           className={cn(
             "md:hidden rounded-full p-2 transition-colors",
-            solid ? "text-foreground" : "text-white"
+            solid ? "text-foreground" : "text-white",
           )}
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -139,20 +156,25 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
             ))}
             {user ? (
               <>
-                <Link
-                  to="/dashboard"
-                  onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-3 text-sm font-medium text-foreground/80 hover:bg-muted"
-                >
-                  Dashboard
-                </Link>
-                {isAdmin && (
+                <div className="flex items-center justify-between rounded-lg px-3 py-2">
+                  <span className="truncate text-sm text-muted-foreground">{user.email}</span>
+                  <NotificationBell solid />
+                </div>
+                {isAdmin ? (
                   <Link
                     to="/admin"
                     onClick={() => setOpen(false)}
                     className="rounded-lg px-3 py-3 text-sm font-medium text-foreground/80 hover:bg-muted"
                   >
-                    Admin
+                    Admin dashboard
+                  </Link>
+                ) : (
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setOpen(false)}
+                    className="rounded-lg px-3 py-3 text-sm font-medium text-foreground/80 hover:bg-muted"
+                  >
+                    Dashboard
                   </Link>
                 )}
                 <button
@@ -177,7 +199,6 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           </div>
         </div>
       )}
-
     </header>
   );
 }

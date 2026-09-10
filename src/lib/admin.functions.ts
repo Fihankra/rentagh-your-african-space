@@ -3,7 +3,10 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 async function requireAdmin(context: { supabase: any; userId: string }) {
-  const { data: isAdmin } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+  const { data: isAdmin } = await context.supabase.rpc("has_role", {
+    _user_id: context.userId,
+    _role: "admin",
+  });
   if (!isAdmin) throw new Error("Forbidden");
 }
 
@@ -70,7 +73,9 @@ export const adminListUsers = createServerFn({ method: "GET" })
       .in("user_id", userIds.length ? userIds : ["00000000-0000-0000-0000-000000000000"]);
     if (profilesError) throw new Error(profilesError.message);
 
-    const profileMap = new Map<string, ProfileRow>((profiles ?? []).map((p: any) => [p.user_id, p]));
+    const profileMap = new Map<string, ProfileRow>(
+      (profiles ?? []).map((p: any) => [p.user_id, p]),
+    );
 
     return (authUsers.users ?? []).map((u) => ({
       id: u.id,
@@ -110,6 +115,39 @@ export const adminSetUserRole = createServerFn({ method: "POST" })
       if (error) throw new Error(error.message);
     }
 
+    return { ok: true };
+  });
+
+export const getMyProfile = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("profiles")
+      .select("full_name, phone, avatar_url")
+      .eq("user_id", context.userId)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    return {
+      fullName: data?.full_name ?? "",
+      phone: data?.phone ?? "",
+      avatarUrl: data?.avatar_url ?? "",
+    };
+  });
+
+const updateProfileSchema = z.object({
+  fullName: z.string().min(1).max(120),
+  phone: z.string().max(40).optional().or(z.literal("")),
+});
+
+export const updateMyProfile = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data) => updateProfileSchema.parse(data))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("profiles")
+      .update({ full_name: data.fullName.trim(), phone: data.phone?.trim() || null })
+      .eq("user_id", context.userId);
+    if (error) throw new Error(error.message);
     return { ok: true };
   });
 

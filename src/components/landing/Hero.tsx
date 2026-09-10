@@ -4,26 +4,28 @@ import hero from "@/assets/hero-villa.jpg";
 
 export function Hero() {
   return (
-    <section className="relative isolate min-h-[88vh] w-full overflow-hidden bg-[color:var(--charcoal)] text-white md:min-h-[92vh]">
+    <section className="relative isolate h-[88svh] min-h-[560px] max-h-[820px] w-full overflow-hidden bg-[color:var(--charcoal)] text-white sm:h-[90svh] md:h-[92svh] md:min-h-[600px]">
       <img
         src={hero}
-        alt="Luxury villa at golden hour in Accra"
+        alt="Modern skyline of Accra, Ghana"
         className="absolute inset-0 h-full w-full object-cover"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/20 md:from-black/70 md:via-black/10 md:to-transparent" />
 
-      <div className="container-x relative flex min-h-[88vh] flex-col justify-end pb-10 pt-28 md:min-h-[92vh] md:pb-20 md:pt-40">
+      <div className="container-x relative flex h-full min-h-[560px] flex-col justify-end pb-10 pt-24 sm:pt-28 md:pb-20 md:pt-40">
         <div className="max-w-3xl">
-          <h1 className="font-display text-balance text-[2.6rem] font-semibold leading-[1.05] md:text-7xl">
-            Find your next address <span className="italic text-[color:var(--accent)]">in Ghana</span>.
+          <h1 className="font-display text-balance text-[2.1rem] font-semibold leading-[1.08] sm:text-[2.6rem] sm:leading-[1.05] md:text-7xl">
+            Find your next address{" "}
+            <span className="italic text-[color:var(--accent)]">in Ghana</span>.
           </h1>
-          <p className="mt-4 max-w-xl text-[15px] text-white/85 md:mt-5 md:text-lg">
-            Student hostels, houses for rent, building and farm lands — verified and beautifully presented.
+          <p className="mt-3 max-w-xl text-sm text-white/85 sm:mt-4 sm:text-[15px] md:mt-5 md:text-lg">
+            Student hostels, houses for rent, building and farm lands — verified and beautifully
+            presented.
           </p>
         </div>
 
         {/* mobile compact search */}
-        <div className="mt-7 md:hidden">
+        <div className="mt-6 sm:mt-7 md:hidden">
           <Link
             to="/browse"
             className="flex items-center gap-3 rounded-full bg-white/95 px-4 py-3 text-foreground shadow-[var(--shadow-elegant)] backdrop-blur"
@@ -61,13 +63,21 @@ export function Hero() {
 }
 
 function Field({
-  icon: Icon, label, placeholder,
-}: { icon: typeof MapPin; label: string; placeholder: string }) {
+  icon: Icon,
+  label,
+  placeholder,
+}: {
+  icon: typeof MapPin;
+  label: string;
+  placeholder: string;
+}) {
   return (
     <label className="group flex items-center gap-3 rounded-2xl px-5 py-3 transition-colors hover:bg-muted">
       <Icon className="h-4 w-4 text-primary" />
       <div className="flex-1">
-        <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">{label}</div>
+        <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          {label}
+        </div>
         <input
           placeholder={placeholder}
           className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"

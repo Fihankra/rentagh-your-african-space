@@ -6,10 +6,22 @@ import takoradi from "@/assets/region-takoradi.jpg";
 import { SectionHeading } from "./SectionHeading";
 
 const regions = [
-  { name: "Accra", region: "Greater Accra", count: 482, img: accra, span: "md:row-span-2 md:col-span-2" },
+  {
+    name: "Accra",
+    region: "Greater Accra",
+    count: 482,
+    img: accra,
+    span: "sm:row-span-2 sm:col-span-2 md:row-span-2 md:col-span-2",
+  },
   { name: "Kumasi", region: "Ashanti", count: 318, img: kumasi, span: "" },
   { name: "Cape Coast", region: "Central", count: 164, img: capecoast, span: "" },
-  { name: "Takoradi", region: "Western", count: 121, img: takoradi, span: "md:col-span-2" },
+  {
+    name: "Takoradi",
+    region: "Western",
+    count: 121,
+    img: takoradi,
+    span: "sm:col-span-2 md:col-span-2",
+  },
 ];
 
 export function RegionGrid() {
@@ -19,7 +31,7 @@ export function RegionGrid() {
         title="Featured regions"
         subtitle="From Accra's coast to the hills of the Ashanti — every region, one platform."
       />
-      <div className="container-x mt-10 grid auto-rows-[220px] grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="container-x mt-10 grid auto-rows-[220px] grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
         {regions.map((r) => (
           <Link
             key={r.name}
