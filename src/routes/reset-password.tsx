@@ -8,9 +8,9 @@ export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordPage,
   head: () => ({
     meta: [
-      { title: "Reset Password — RentaGh" },
+      { title: "Reset Password | RentaGh" },
       { name: "description", content: "Reset your RentaGh account password." },
-      { property: "og:title", content: "Reset Password — RentaGh" },
+      { property: "og:title", content: "Reset Password | RentaGh" },
       { property: "og:description", content: "Reset your RentaGh account password." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -81,7 +81,9 @@ function ResetPasswordPage() {
         <div className="mx-auto w-full max-w-md rounded-[32px] border hairline bg-card p-8 shadow-[var(--shadow-card)]">
           {phase === "request" && (
             <>
-              <h1 className="font-display text-3xl font-semibold text-foreground">Reset password</h1>
+              <h1 className="font-display text-3xl font-semibold text-foreground">
+                Reset password
+              </h1>
               <p className="mt-2 text-sm text-muted-foreground">
                 Enter your email and we will send a reset link.
               </p>
@@ -117,8 +119,12 @@ function ResetPasswordPage() {
 
           {phase === "update" && (
             <>
-              <h1 className="font-display text-3xl font-semibold text-foreground">Choose new password</h1>
-              <p className="mt-2 text-sm text-muted-foreground">Enter a new password for your account.</p>
+              <h1 className="font-display text-3xl font-semibold text-foreground">
+                Choose new password
+              </h1>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Enter a new password for your account.
+              </p>
               {error && (
                 <div className="mt-6 rounded-2xl bg-red-50 p-4 text-sm text-red-800 dark:bg-red-950/30 dark:text-red-200">
                   {error}

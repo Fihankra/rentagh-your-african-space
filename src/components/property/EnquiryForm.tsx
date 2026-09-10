@@ -66,7 +66,7 @@ export function EnquiryForm({ propertyId, ownerName }: { propertyId: string; own
         minLength={10}
         value={form.message}
         onChange={(e) => setForm({ ...form, message: e.target.value })}
-        placeholder="Tell the owner what you need — move-in date, questions, viewing time…"
+        placeholder="Tell the owner what you need: move-in date, questions, viewing time…"
         className="block w-full resize-none rounded-2xl border hairline bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
       />
       <button

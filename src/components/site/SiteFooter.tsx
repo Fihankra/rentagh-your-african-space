@@ -41,7 +41,7 @@ export function SiteFooter() {
             <Logo dark />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/65">
               Every Space. One Platform. Student hostels, houses for rent, building lands and farm
-              lands — verified across Ghana.
+              lands, verified across Ghana.
             </p>
             <form
               onSubmit={(e) => e.preventDefault()}

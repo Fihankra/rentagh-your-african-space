@@ -32,10 +32,11 @@ import {
 
 export const Route = createFileRoute("/_authenticated/admin")({
   ssr: false,
-  beforeLoad: async () => {
-    const { data, error } = await supabase.auth.getUser();
-    const user = data?.user;
-    if (error || !user) throw redirect({ to: "/login" });
+  beforeLoad: async ({ context }) => {
+    // Parent `_authenticated` layout already verified the session; reuse it
+    // instead of calling getUser() again.
+    const user = context.user;
+    if (!user) throw redirect({ to: "/login" });
     const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
     if (!isAdmin) throw redirect({ to: "/dashboard" });
     return {};

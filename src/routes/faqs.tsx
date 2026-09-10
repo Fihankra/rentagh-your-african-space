@@ -20,7 +20,7 @@ const faqs = [
     a: "Yes. Hostel listings show per-bed and per-semester pricing, room type, and distance to campus.",
   },
   {
-    q: "I own land or a farm — can I list it?",
+    q: "I own land or a farm, can I list it?",
     a: "Yes. RentaGh supports lands and farmlands for both sale and hire, including site plans and indenture documentation.",
   },
   {
@@ -33,10 +33,17 @@ export const Route = createFileRoute("/faqs")({
   component: FaqsPage,
   head: () => ({
     meta: [
-      { title: "FAQs — RentaGh" },
-      { name: "description", content: "Answers about verification, escrow payments, hostel bookings and listing your property on RentaGh." },
-      { property: "og:title", content: "FAQs — RentaGh" },
-      { property: "og:description", content: "Answers about verification, escrow payments and listing on RentaGh." },
+      { title: "FAQs | RentaGh" },
+      {
+        name: "description",
+        content:
+          "Answers about verification, escrow payments, hostel bookings and listing your property on RentaGh.",
+      },
+      { property: "og:title", content: "FAQs | RentaGh" },
+      {
+        property: "og:description",
+        content: "Answers about verification, escrow payments and listing on RentaGh.",
+      },
     ],
     links: [{ rel: "canonical", href: "/faqs" }],
     scripts: [
@@ -80,7 +87,10 @@ function FaqsPage() {
         </div>
 
         <div className="mt-12">
-          <Link to="/contact" className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground">
+          <Link
+            to="/contact"
+            className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground"
+          >
             Still need help? Contact us
           </Link>
         </div>

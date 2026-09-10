@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { PropertyCard } from "@/components/site/PropertyCard";
+import { PropertyCardSkeleton } from "@/components/site/PropertyCardSkeleton";
 import { listProperties } from "@/lib/properties.functions";
 import { SectionHeading } from "./SectionHeading";
 
@@ -19,13 +20,13 @@ export function FeaturedRail() {
     <section className="mt-24">
       <SectionHeading
         title="Featured this week"
-        subtitle="Student hostels, houses for rent, building and farm lands — verified and ready."
+        subtitle="Student hostels, houses for rent, building and farm lands, verified and ready."
         link={{ to: "/browse", label: "View all listings" }}
       />
       <div className="container-x mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {list.map((p) => (
-          <PropertyCard key={p.id} p={p} />
-        ))}
+        {isLoading
+          ? Array.from({ length: 3 }).map((_, i) => <PropertyCardSkeleton key={i} />)
+          : list.map((p) => <PropertyCard key={p.id} p={p} />)}
       </div>
     </section>
   );

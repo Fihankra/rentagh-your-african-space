@@ -13,13 +13,13 @@ export function Hero() {
       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/20 md:from-black/70 md:via-black/10 md:to-transparent" />
 
       <div className="container-x relative flex h-full min-h-[560px] flex-col justify-end pb-10 pt-24 sm:pt-28 md:pb-20 md:pt-40">
-        <div className="max-w-3xl">
+        <div className="max-w-3xl rounded-3xl bg-black/25 p-5 backdrop-blur-sm sm:p-7 md:p-8">
           <h1 className="font-display text-balance text-[2.1rem] font-semibold leading-[1.08] sm:text-[2.6rem] sm:leading-[1.05] md:text-7xl">
             Find your next address{" "}
             <span className="italic text-[color:var(--accent)]">in Ghana</span>.
           </h1>
           <p className="mt-3 max-w-xl text-sm text-white/85 sm:mt-4 sm:text-[15px] md:mt-5 md:text-lg">
-            Student hostels, houses for rent, building and farm lands — verified and beautifully
+            Student hostels, houses for rent, building and farm lands, verified and beautifully
             presented.
           </p>
         </div>

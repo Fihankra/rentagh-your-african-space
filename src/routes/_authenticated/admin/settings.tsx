@@ -6,7 +6,7 @@ import { listCategoryMetadata, updateCategoryMetadata } from "@/lib/properties.f
 export const Route = createFileRoute("/_authenticated/admin/settings")({
   component: AdminSettings,
   head: () => ({
-    meta: [{ title: "Site Settings — RentaGh Admin" }],
+    meta: [{ title: "Site Settings | RentaGh Admin" }],
   }),
 });
 

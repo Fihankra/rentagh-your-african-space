@@ -6,7 +6,7 @@ import { PropertiesTable } from "@/components/admin/PropertiesTable";
 export const Route = createFileRoute("/_authenticated/admin/sales")({
   component: AdminSales,
   head: () => ({
-    meta: [{ title: "Sales — RentaGh Admin" }],
+    meta: [{ title: "Sales | RentaGh Admin" }],
   }),
 });
 

@@ -32,10 +32,13 @@ export const Route = createFileRoute("/_authenticated/listings/new")({
   component: NewListingPage,
   head: () => ({
     meta: [
-      { title: "Add Listing — RentaGh" },
+      { title: "Add Listing | RentaGh" },
       { name: "description", content: "List a hostel, house, land or farm land on RentaGh." },
-      { property: "og:title", content: "Add Listing — RentaGh" },
-      { property: "og:description", content: "List a hostel, house, land or farm land on RentaGh." },
+      { property: "og:title", content: "Add Listing | RentaGh" },
+      {
+        property: "og:description",
+        content: "List a hostel, house, land or farm land on RentaGh.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -97,7 +100,6 @@ function NewListingPage() {
       }
       setImages((prev) => [...prev, { url: urlData.signedUrl, file }]);
     }
-
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -146,16 +148,24 @@ function NewListingPage() {
         <SiteHeader />
         <main className="container-x pt-28 pb-20 md:pt-32">
           <div className="mx-auto max-w-lg rounded-[28px] border hairline bg-card p-8 text-center">
-            <h1 className="font-display text-2xl font-semibold text-foreground">Listings are added by RentaGh</h1>
+            <h1 className="font-display text-2xl font-semibold text-foreground">
+              Listings are added by RentaGh
+            </h1>
             <p className="mt-3 text-muted-foreground">
-              Only the administrator can publish properties. If you have a space you want listed, send us the details
-              and we will add it for you.
+              Only the administrator can publish properties. If you have a space you want listed,
+              send us the details and we will add it for you.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Link to="/contact" className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground">
+              <Link
+                to="/contact"
+                className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+              >
                 Contact us
               </Link>
-              <Link to="/dashboard" className="rounded-full border hairline bg-background px-5 py-2.5 text-sm font-semibold text-foreground">
+              <Link
+                to="/dashboard"
+                className="rounded-full border hairline bg-background px-5 py-2.5 text-sm font-semibold text-foreground"
+              >
                 Back to dashboard
               </Link>
             </div>
@@ -170,8 +180,12 @@ function NewListingPage() {
     <>
       <SiteHeader />
       <main className="container-x pt-28 pb-20 md:pt-32">
-        <h1 className="font-display text-3xl font-semibold text-foreground md:text-4xl">Add a listing</h1>
-        <p className="mt-1 text-muted-foreground">Describe your property and upload clear photos.</p>
+        <h1 className="font-display text-3xl font-semibold text-foreground md:text-4xl">
+          Add a listing
+        </h1>
+        <p className="mt-1 text-muted-foreground">
+          Describe your property and upload clear photos.
+        </p>
 
         {error && (
           <div className="mt-6 rounded-2xl bg-red-50 p-4 text-sm text-red-800 dark:bg-red-950/30 dark:text-red-200">
@@ -182,7 +196,9 @@ function NewListingPage() {
         <form onSubmit={handleSubmit} className="mt-8 grid gap-8 lg:grid-cols-3">
           <section className="lg:col-span-2 space-y-6">
             <Card>
-              <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Category</label>
+              <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                Category
+              </label>
               <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {categories.map((cat) => (
                   <button
@@ -191,7 +207,9 @@ function NewListingPage() {
                     onClick={() => setCategory(cat.slug)}
                     className={cn(
                       "rounded-2xl border hairline px-3 py-4 text-left text-sm font-medium transition-all",
-                      category === cat.slug ? "border-primary bg-primary/5 text-primary" : "bg-card hover:bg-muted"
+                      category === cat.slug
+                        ? "border-primary bg-primary/5 text-primary"
+                        : "bg-card hover:bg-muted",
                     )}
                   >
                     {cat.label}
@@ -252,7 +270,9 @@ function NewListingPage() {
                 </Field>
                 <Field label="Price period">
                   <select
-                    value={category === "lands" || category === "farmlands" ? "total" : form.price_period}
+                    value={
+                      category === "lands" || category === "farmlands" ? "total" : form.price_period
+                    }
                     disabled={category === "lands" || category === "farmlands"}
                     onChange={(e) => setForm({ ...form, price_period: e.target.value })}
                     className="w-full rounded-2xl border hairline bg-background px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[color:var(--ring)] disabled:opacity-60"
@@ -351,7 +371,9 @@ function NewListingPage() {
 
             {category !== "lands" && category !== "farmlands" && (
               <Card>
-                <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Amenities</label>
+                <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                  Amenities
+                </label>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {[
                     "Air conditioning",
@@ -373,7 +395,9 @@ function NewListingPage() {
                       onClick={() => toggleAmenity(a)}
                       className={cn(
                         "rounded-full border hairline px-3 py-1.5 text-xs font-medium transition-colors",
-                        amenities.includes(a) ? "bg-primary text-primary-foreground border-primary" : "bg-card hover:bg-muted"
+                        amenities.includes(a)
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "bg-card hover:bg-muted",
                       )}
                     >
                       {a}
@@ -386,7 +410,9 @@ function NewListingPage() {
 
           <aside className="space-y-6">
             <Card>
-              <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Photos</label>
+              <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                Photos
+              </label>
               <button
                 type="button"
                 onClick={() => fileRef.current?.click()}
@@ -423,14 +449,18 @@ function NewListingPage() {
 
             {isAdmin && (
               <Card>
-                <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Visibility</label>
+                <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                  Visibility
+                </label>
                 <div className="mt-3 space-y-3">
                   <label className="flex items-center justify-between rounded-2xl border hairline bg-background px-4 py-3 text-sm">
                     <span>Publish immediately</span>
                     <input
                       type="checkbox"
                       checked={form.status === "published"}
-                      onChange={(e) => setForm({ ...form, status: e.target.checked ? "published" : "draft" })}
+                      onChange={(e) =>
+                        setForm({ ...form, status: e.target.checked ? "published" : "draft" })
+                      }
                       className="h-4 w-4 accent-primary"
                     />
                   </label>
@@ -463,13 +493,19 @@ function NewListingPage() {
 }
 
 function Card({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-[24px] border hairline bg-card p-6 shadow-[var(--shadow-card)]">{children}</div>;
+  return (
+    <div className="rounded-[24px] border hairline bg-card p-6 shadow-[var(--shadow-card)]">
+      {children}
+    </div>
+  );
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">{label}</label>
+      <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+        {label}
+      </label>
       <div className="mt-2">{children}</div>
     </div>
   );

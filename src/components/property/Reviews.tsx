@@ -35,13 +35,20 @@ export function Reviews({ propertyId }: { propertyId: string }) {
 
   const save = useMutation({
     mutationFn: () => saveMyReview({ data: { propertyId, rating, comment: comment || undefined } }),
-    onSuccess: () => { setError(""); invalidate(); },
+    onSuccess: () => {
+      setError("");
+      invalidate();
+    },
     onError: (e: any) => setError(e?.message ?? "Could not save your review."),
   });
 
   const remove = useMutation({
     mutationFn: (id: string) => deleteMyReview({ data: { id } }),
-    onSuccess: () => { setComment(""); setRating(5); invalidate(); },
+    onSuccess: () => {
+      setComment("");
+      setRating(5);
+      invalidate();
+    },
   });
 
   const average = reviews.length
@@ -56,7 +63,9 @@ export function Reviews({ propertyId }: { propertyId: string }) {
           <div className="flex items-center gap-2 text-sm text-foreground/75">
             <Star className="h-4 w-4 fill-[color:var(--accent)] text-[color:var(--accent)]" />
             <span className="font-semibold text-foreground">{average}</span>
-            <span>· {reviews.length} {reviews.length === 1 ? "review" : "reviews"}</span>
+            <span>
+              · {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
+            </span>
           </div>
         )}
       </div>
@@ -65,7 +74,10 @@ export function Reviews({ propertyId }: { propertyId: string }) {
       <div className="mt-6 rounded-3xl border hairline bg-card p-6">
         {!user ? (
           <p className="text-sm text-muted-foreground">
-            <Link to="/login" className="font-semibold text-primary">Sign in</Link> to share your experience with this property.
+            <Link to="/login" className="font-semibold text-primary">
+              Sign in
+            </Link>{" "}
+            to share your experience with this property.
           </p>
         ) : (
           <>
@@ -84,7 +96,9 @@ export function Reviews({ propertyId }: { propertyId: string }) {
                   <Star
                     className={cn(
                       "h-6 w-6 transition-colors",
-                      n <= rating ? "fill-[color:var(--accent)] text-[color:var(--accent)]" : "text-muted-foreground/40"
+                      n <= rating
+                        ? "fill-[color:var(--accent)] text-[color:var(--accent)]"
+                        : "text-muted-foreground/40",
                     )}
                   />
                 </button>
@@ -124,7 +138,9 @@ export function Reviews({ propertyId }: { propertyId: string }) {
       {isLoading ? (
         <p className="mt-6 text-sm text-muted-foreground">Loading reviews…</p>
       ) : reviews.length === 0 ? (
-        <p className="mt-6 text-sm text-muted-foreground">No reviews yet — be the first to share your experience.</p>
+        <p className="mt-6 text-sm text-muted-foreground">
+          No reviews yet. Be the first to share your experience.
+        </p>
       ) : (
         <ul className="mt-6 space-y-4">
           {reviews.map((r) => (
@@ -137,13 +153,17 @@ export function Reviews({ propertyId }: { propertyId: string }) {
                       key={n}
                       className={cn(
                         "h-3.5 w-3.5",
-                        n <= r.rating ? "fill-[color:var(--accent)] text-[color:var(--accent)]" : "text-muted-foreground/30"
+                        n <= r.rating
+                          ? "fill-[color:var(--accent)] text-[color:var(--accent)]"
+                          : "text-muted-foreground/30",
                       )}
                     />
                   ))}
                 </div>
               </div>
-              <div className="text-xs text-muted-foreground">{new Date(r.createdAt).toLocaleDateString()}</div>
+              <div className="text-xs text-muted-foreground">
+                {new Date(r.createdAt).toLocaleDateString()}
+              </div>
               {r.comment && <p className="mt-3 text-sm text-foreground/80">{r.comment}</p>}
             </li>
           ))}

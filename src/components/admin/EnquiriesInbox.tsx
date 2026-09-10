@@ -149,7 +149,7 @@ function EnquiryThread({ e }: { e: Enquiry }) {
             <button
               onClick={() =>
                 setBody(
-                  `Hello ${e.name}, thank you for your interest in ${e.propertyTitle}. The property is available — I can arrange a viewing at a time that suits you. Please confirm and share your preferred day.`,
+                  `Hello ${e.name}, thank you for your interest in ${e.propertyTitle}. The property is available. I can arrange a viewing at a time that suits you. Please confirm and share your preferred day.`,
                 )
               }
               className="rounded-2xl border hairline bg-background px-5 py-3 text-sm font-semibold text-foreground"

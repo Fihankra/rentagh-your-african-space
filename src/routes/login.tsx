@@ -8,10 +8,16 @@ export const Route = createFileRoute("/login")({
   component: LoginPage,
   head: () => ({
     meta: [
-      { title: "Login — RentaGh" },
-      { name: "description", content: "Sign in to RentaGh to manage your rentals, listings and enquiries." },
-      { property: "og:title", content: "Login — RentaGh" },
-      { property: "og:description", content: "Sign in to manage your rentals, listings and enquiries on RentaGh." },
+      { title: "Login | RentaGh" },
+      {
+        name: "description",
+        content: "Sign in to RentaGh to manage your rentals, listings and enquiries.",
+      },
+      { property: "og:title", content: "Login | RentaGh" },
+      {
+        property: "og:description",
+        content: "Sign in to manage your rentals, listings and enquiries on RentaGh.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -112,7 +118,10 @@ function LoginPage() {
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             {mode === "signup" && (
               <div>
-                <label htmlFor="fullName" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                <label
+                  htmlFor="fullName"
+                  className="text-xs font-semibold uppercase tracking-widest text-muted-foreground"
+                >
                   Full name
                 </label>
                 <input
@@ -127,7 +136,10 @@ function LoginPage() {
               </div>
             )}
             <div>
-              <label htmlFor="email" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              <label
+                htmlFor="email"
+                className="text-xs font-semibold uppercase tracking-widest text-muted-foreground"
+              >
                 Email
               </label>
               <input
@@ -142,7 +154,10 @@ function LoginPage() {
               />
             </div>
             <div>
-              <label htmlFor="password" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+              <label
+                htmlFor="password"
+                className="text-xs font-semibold uppercase tracking-widest text-muted-foreground"
+              >
                 Password
               </label>
               <input

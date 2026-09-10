@@ -14,10 +14,17 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "RentaGh — Every Space. One Platform." },
-      { name: "description", content: "Ghana's property platform for student hostels, houses for rent, building lands and farm lands — verified listings, escrow-protected payments." },
-      { property: "og:title", content: "RentaGh — Every Space. One Platform." },
-      { property: "og:description", content: "Africa's premium property platform built for Ghana." },
+      { title: "RentaGh: Every Space. One Platform." },
+      {
+        name: "description",
+        content:
+          "Ghana's property platform for student hostels, houses for rent, building lands and farm lands. Verified listings, escrow-protected payments.",
+      },
+      { property: "og:title", content: "RentaGh: Every Space. One Platform." },
+      {
+        property: "og:description",
+        content: "Africa's premium property platform built for Ghana.",
+      },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/" },
     ],
@@ -53,7 +60,7 @@ function Index() {
         <CategorySpotlight
           category="farmlands"
           title="Farm lands to hire & own"
-          subtitle="Productive cocoa, palm and arable land — fully documented and ready."
+          subtitle="Productive cocoa, palm and arable land, fully documented and ready."
         />
 
         <StatsBand />

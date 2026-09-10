@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { SlidersHorizontal, X } from "lucide-react";
 import { PropertyCard } from "@/components/site/PropertyCard";
+import { PropertyCardSkeleton } from "@/components/site/PropertyCardSkeleton";
 import { listProperties } from "@/lib/properties.functions";
 import { categories, type CategorySlug } from "@/lib/categories";
 import { formatGHS } from "@/lib/property";
@@ -47,7 +48,10 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
   const max = Number(maxPrice) || undefined;
 
   const matchesQuery = (p: (typeof source)[number]) =>
-    !query || `${p.title} ${p.city} ${p.neighborhood} ${p.region}`.toLowerCase().includes(query.toLowerCase());
+    !query ||
+    `${p.title} ${p.city} ${p.neighborhood} ${p.region}`
+      .toLowerCase()
+      .includes(query.toLowerCase());
 
   const matchesSecondary = (p: (typeof source)[number]) => {
     if (availability !== "all" && p.listingType !== availability) return false;
@@ -79,21 +83,29 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
   }, [category, region, query, availability, minPrice, maxPrice, sort]);
 
   const categoryCounts = useMemo(() => {
-    const base = source.filter((p) => (region === "All regions" || p.region === region) && matchesSecondary(p));
+    const base = source.filter(
+      (p) => (region === "All regions" || p.region === region) && matchesSecondary(p),
+    );
     const counts: Record<string, number> = { all: base.length };
     for (const c of categories) counts[c.slug] = base.filter((p) => p.category === c.slug).length;
     return counts;
   }, [source, region, query, availability, minPrice, maxPrice]);
 
   const regionCounts = useMemo(() => {
-    const base = source.filter((p) => (category === "all" || p.category === category) && matchesSecondary(p));
+    const base = source.filter(
+      (p) => (category === "all" || p.category === category) && matchesSecondary(p),
+    );
     const counts: Record<string, number> = { "All regions": base.length };
-    for (const r of regions) if (r !== "All regions") counts[r] = base.filter((p) => p.region === r).length;
+    for (const r of regions)
+      if (r !== "All regions") counts[r] = base.filter((p) => p.region === r).length;
     return counts;
   }, [source, category, query, availability, minPrice, maxPrice]);
 
   const activeExtras =
-    (availability !== "all" ? 1 : 0) + (minPrice ? 1 : 0) + (maxPrice ? 1 : 0) + (sort !== "featured" ? 1 : 0);
+    (availability !== "all" ? 1 : 0) +
+    (minPrice ? 1 : 0) +
+    (maxPrice ? 1 : 0) +
+    (sort !== "featured" ? 1 : 0);
 
   function clearAll() {
     setAvailability("all");
@@ -109,7 +121,9 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <h1 className="font-display text-4xl font-semibold text-foreground md:text-5xl">
-            {category === "all" ? "All properties" : categories.find((c) => c.slug === category)?.label}
+            {category === "all"
+              ? "All properties"
+              : categories.find((c) => c.slug === category)?.label}
           </h1>
           <p className="mt-2 text-muted-foreground">{list.length} listings · across Ghana</p>
         </div>
@@ -125,7 +139,9 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
             onClick={() => setFiltersOpen((v) => !v)}
             className={cn(
               "flex h-12 shrink-0 items-center gap-2 rounded-full border hairline px-4 text-sm font-medium",
-              filtersOpen || activeExtras ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground/80"
+              filtersOpen || activeExtras
+                ? "bg-primary text-primary-foreground border-primary"
+                : "bg-card text-foreground/80",
             )}
           >
             <SlidersHorizontal className="h-4 w-4" />
@@ -141,7 +157,9 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
             onClick={() => setCategory("all")}
             className={cn(
               "shrink-0 rounded-full border hairline px-4 py-2 text-sm transition-colors",
-              category === "all" ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground/75 hover:bg-muted"
+              category === "all"
+                ? "bg-primary text-primary-foreground border-primary"
+                : "bg-card text-foreground/75 hover:bg-muted",
             )}
           >
             All <span className="opacity-70">({categoryCounts["all"] ?? 0})</span>
@@ -152,7 +170,9 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
               onClick={() => setCategory(c.slug)}
               className={cn(
                 "shrink-0 rounded-full border hairline px-4 py-2 text-sm transition-colors",
-                category === c.slug ? "bg-primary text-primary-foreground border-primary" : "bg-card text-foreground/75 hover:bg-muted"
+                category === c.slug
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-card text-foreground/75 hover:bg-muted",
               )}
             >
               {c.label} <span className="opacity-70">({categoryCounts[c.slug] ?? 0})</span>
@@ -169,7 +189,9 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
               onClick={() => setRegion(r)}
               className={cn(
                 "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors",
-                region === r ? "bg-foreground text-background" : "bg-muted text-foreground/70 hover:bg-muted/70"
+                region === r
+                  ? "bg-foreground text-background"
+                  : "bg-muted text-foreground/70 hover:bg-muted/70",
               )}
             >
               {r} <span className="opacity-70">({regionCounts[r] ?? 0})</span>
@@ -194,7 +216,9 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
 
           <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             <div>
-              <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Availability</div>
+              <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+                Availability
+              </div>
               <div className="mt-2 flex flex-wrap gap-2">
                 {availabilityOptions.map((o) => (
                   <button
@@ -203,7 +227,9 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
                     onClick={() => setAvailability(o.value)}
                     className={cn(
                       "rounded-full border hairline px-3.5 py-2 text-xs font-medium",
-                      availability === o.value ? "border-primary bg-primary/10 text-primary" : "bg-background text-foreground/75"
+                      availability === o.value
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "bg-background text-foreground/75",
                     )}
                   >
                     {o.label}
@@ -213,7 +239,9 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
             </div>
 
             <div>
-              <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Price range (GHS)</div>
+              <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+                Price range (GHS)
+              </div>
               <div className="mt-2 flex items-center gap-2">
                 <input
                   inputMode="numeric"
@@ -233,13 +261,16 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
               </div>
               {(min !== undefined || max !== undefined) && (
                 <p className="mt-2 text-xs text-muted-foreground">
-                  {min !== undefined ? formatGHS(min) : "Any"} – {max !== undefined ? formatGHS(max) : "Any"}
+                  {min !== undefined ? formatGHS(min) : "Any"} –{" "}
+                  {max !== undefined ? formatGHS(max) : "Any"}
                 </p>
               )}
             </div>
 
             <div>
-              <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Sort by</div>
+              <div className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+                Sort by
+              </div>
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as typeof sort)}
@@ -253,7 +284,11 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
           </div>
 
           <div className="mt-5 flex items-center justify-between border-t hairline pt-4">
-            <button type="button" onClick={clearAll} className="text-sm font-medium text-muted-foreground hover:text-foreground">
+            <button
+              type="button"
+              onClick={clearAll}
+              className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            >
               Clear all
             </button>
             <button
@@ -267,12 +302,25 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
         </div>
       )}
 
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {pageItems.map((p) => <PropertyCard key={p.id} p={p} />)}
-      </div>
+      {isLoading && list.length === 0 ? (
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <PropertyCardSkeleton key={i} />
+          ))}
+        </div>
+      ) : (
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {pageItems.map((p) => (
+            <PropertyCard key={p.id} p={p} />
+          ))}
+        </div>
+      )}
 
       {totalPages > 1 && (
-        <nav className="mt-10 flex flex-wrap items-center justify-center gap-2" aria-label="Pagination">
+        <nav
+          className="mt-10 flex flex-wrap items-center justify-center gap-2"
+          aria-label="Pagination"
+        >
           <button
             type="button"
             onClick={() => setPage((n) => Math.max(1, n - 1))}
@@ -289,7 +337,9 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
               aria-current={n === safePage ? "page" : undefined}
               className={cn(
                 "min-w-10 rounded-full px-3.5 py-2.5 text-sm font-semibold transition-colors",
-                n === safePage ? "bg-primary text-primary-foreground" : "bg-muted text-foreground/70 hover:bg-muted/70"
+                n === safePage
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-foreground/70 hover:bg-muted/70",
               )}
             >
               {n}
@@ -306,16 +356,14 @@ export function BrowseGrid({ initialCategory }: { initialCategory?: CategorySlug
         </nav>
       )}
 
-      {isLoading && list.length === 0 && (
-        <div className="mt-16 rounded-3xl border hairline bg-card p-12 text-center text-muted-foreground">
-          Loading listings…
-        </div>
-      )}
-
       {!isLoading && list.length === 0 && (
         <div className="mt-16 rounded-3xl border hairline bg-card p-12 text-center">
-          <div className="font-display text-2xl text-foreground">No listings match your filters</div>
-          <p className="mt-2 text-muted-foreground">Try a wider price range, another region, or clear your search.</p>
+          <div className="font-display text-2xl text-foreground">
+            No listings match your filters
+          </div>
+          <p className="mt-2 text-muted-foreground">
+            Try a wider price range, another region, or clear your search.
+          </p>
           <button
             type="button"
             onClick={clearAll}

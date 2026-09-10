@@ -6,10 +6,17 @@ export const Route = createFileRoute("/terms")({
   component: TermsPage,
   head: () => ({
     meta: [
-      { title: "Terms & Conditions — RentaGh" },
-      { name: "description", content: "The terms that govern listing, renting and buying property through RentaGh in Ghana." },
-      { property: "og:title", content: "Terms & Conditions — RentaGh" },
-      { property: "og:description", content: "The terms that govern listing, renting and buying property through RentaGh." },
+      { title: "Terms & Conditions | RentaGh" },
+      {
+        name: "description",
+        content:
+          "The terms that govern listing, renting and buying property through RentaGh in Ghana.",
+      },
+      { property: "og:title", content: "Terms & Conditions | RentaGh" },
+      {
+        property: "og:description",
+        content: "The terms that govern listing, renting and buying property through RentaGh.",
+      },
     ],
     links: [{ rel: "canonical", href: "/terms" }],
   }),
@@ -55,7 +62,8 @@ function TermsPage() {
           Terms &amp; Conditions
         </h1>
         <p className="mt-4 max-w-2xl text-base text-muted-foreground">
-          Last updated September 2026. These terms are a plain-language summary of how RentaGh works.
+          Last updated September 2026. These terms are a plain-language summary of how RentaGh
+          works.
         </p>
 
         <div className="mt-12 grid gap-5 lg:max-w-3xl">

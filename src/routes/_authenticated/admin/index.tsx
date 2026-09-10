@@ -6,7 +6,7 @@ import { adminStats } from "@/lib/admin.functions";
 export const Route = createFileRoute("/_authenticated/admin/")({
   component: AdminOverview,
   head: () => ({
-    meta: [{ title: "Overview — RentaGh Admin" }],
+    meta: [{ title: "Overview | RentaGh Admin" }],
   }),
 });
 

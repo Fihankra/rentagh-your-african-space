@@ -8,7 +8,23 @@ import { EnquiryForm } from "@/components/property/EnquiryForm";
 import { getPropertyById } from "@/lib/properties.functions";
 import { categoryLabel } from "@/lib/categories";
 import { priceLabel, type Property } from "@/lib/property";
-import { BadgeCheck, MapPin, Star, BedDouble, Bath, Ruler, Wifi, ShieldCheck, ArrowRight, Hospital, GraduationCap, ShoppingBag, Fuel, Landmark as LandmarkIcon, Building2 } from "lucide-react";
+import {
+  BadgeCheck,
+  MapPin,
+  Star,
+  BedDouble,
+  Bath,
+  Ruler,
+  Wifi,
+  ShieldCheck,
+  ArrowRight,
+  Hospital,
+  GraduationCap,
+  ShoppingBag,
+  Fuel,
+  Landmark as LandmarkIcon,
+  Building2,
+} from "lucide-react";
 
 export const Route = createFileRoute("/property/$id")({
   component: PropertyPage,
@@ -19,10 +35,10 @@ export const Route = createFileRoute("/property/$id")({
   },
   head: ({ loaderData, params }) => {
     const p = loaderData?.p;
-    if (!p) return { meta: [{ title: "Property — RentaGh" }] };
+    if (!p) return { meta: [{ title: "Property | RentaGh" }] };
     return {
       meta: [
-        { title: `${p.title} — RentaGh` },
+        { title: `${p.title} | RentaGh` },
         { name: "description", content: p.description.slice(0, 160) },
         { property: "og:title", content: p.title },
         { property: "og:description", content: p.description.slice(0, 160) },
@@ -37,7 +53,9 @@ export const Route = createFileRoute("/property/$id")({
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
         <h1 className="font-display text-3xl">Listing not found</h1>
-        <Link to="/browse" className="mt-4 inline-block text-primary">Back to browse</Link>
+        <Link to="/browse" className="mt-4 inline-block text-primary">
+          Back to browse
+        </Link>
       </div>
     </div>
   ),
@@ -49,9 +67,19 @@ export const Route = createFileRoute("/property/$id")({
 });
 
 const iconForLandmark: Record<string, typeof Hospital> = {
-  Hospital, University: GraduationCap, School: GraduationCap, Market: ShoppingBag, Mall: ShoppingBag,
-  Fuel, Bank: Building2, Church: LandmarkIcon, Mosque: LandmarkIcon, Police: ShieldCheck,
-  Transport: ArrowRight, Beach: LandmarkIcon, Landmark: LandmarkIcon,
+  Hospital,
+  University: GraduationCap,
+  School: GraduationCap,
+  Market: ShoppingBag,
+  Mall: ShoppingBag,
+  Fuel,
+  Bank: Building2,
+  Church: LandmarkIcon,
+  Mosque: LandmarkIcon,
+  Police: ShieldCheck,
+  Transport: ArrowRight,
+  Beach: LandmarkIcon,
+  Landmark: LandmarkIcon,
 };
 
 function PropertyPage() {
@@ -63,9 +91,17 @@ function PropertyPage() {
       <main className="container-x pt-28 md:pt-32">
         {/* breadcrumb */}
         <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
-          <Link to="/browse" className="hover:text-primary">Browse</Link>
+          <Link to="/browse" className="hover:text-primary">
+            Browse
+          </Link>
           <span>·</span>
-          <Link to="/browse/$category" params={{ category: p.category }} className="hover:text-primary">{categoryLabel(p.category)}</Link>
+          <Link
+            to="/browse/$category"
+            params={{ category: p.category }}
+            className="hover:text-primary"
+          >
+            {categoryLabel(p.category)}
+          </Link>
           <span>·</span>
           <span className="text-foreground/70">{p.neighborhood}</span>
         </div>
@@ -73,15 +109,26 @@ function PropertyPage() {
         {/* title row */}
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <h1 className="font-display text-4xl font-semibold text-foreground md:text-5xl">{p.title}</h1>
+            <h1 className="font-display text-4xl font-semibold text-foreground md:text-5xl">
+              {p.title}
+            </h1>
             <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
               {p.reviews > 0 ? (
-                <span className="flex items-center gap-1"><Star className="h-4 w-4 fill-[color:var(--accent)] text-[color:var(--accent)]" /> {p.rating} · {p.reviews} {p.reviews === 1 ? "review" : "reviews"}</span>
+                <span className="flex items-center gap-1">
+                  <Star className="h-4 w-4 fill-[color:var(--accent)] text-[color:var(--accent)]" />{" "}
+                  {p.rating} · {p.reviews} {p.reviews === 1 ? "review" : "reviews"}
+                </span>
               ) : (
                 <span>New listing</span>
               )}
-              <span className="flex items-center gap-1"><MapPin className="h-4 w-4" /> {p.neighborhood}, {p.city}</span>
-              {p.verified && <span className="flex items-center gap-1 text-primary"><BadgeCheck className="h-4 w-4" /> Verified by RentaGh</span>}
+              <span className="flex items-center gap-1">
+                <MapPin className="h-4 w-4" /> {p.neighborhood}, {p.city}
+              </span>
+              {p.verified && (
+                <span className="flex items-center gap-1 text-primary">
+                  <BadgeCheck className="h-4 w-4" /> Verified by RentaGh
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -121,7 +168,10 @@ function PropertyPage() {
               <h2 className="font-display text-2xl text-foreground">What this place offers</h2>
               <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {p.amenities.map((a) => (
-                  <div key={a} className="flex items-center gap-3 rounded-2xl border hairline bg-card px-4 py-3 text-sm text-foreground/85">
+                  <div
+                    key={a}
+                    className="flex items-center gap-3 rounded-2xl border hairline bg-card px-4 py-3 text-sm text-foreground/85"
+                  >
                     <Wifi className="h-4 w-4 text-primary" />
                     {a}
                   </div>
@@ -132,7 +182,9 @@ function PropertyPage() {
             {/* map */}
             <div className="mt-12 border-t hairline pt-8">
               <h2 className="font-display text-2xl text-foreground">Location</h2>
-              <p className="mt-2 text-muted-foreground">{p.neighborhood}, {p.city} · {p.region}</p>
+              <p className="mt-2 text-muted-foreground">
+                {p.neighborhood}, {p.city} · {p.region}
+              </p>
               <div className="mt-6">
                 <MapPlaceholder lat={p.coords.lat} lng={p.coords.lng} label={p.neighborhood} />
               </div>
@@ -167,11 +219,14 @@ function PropertyPage() {
           <aside className="lg:sticky lg:top-28 lg:self-start">
             <div className="rounded-3xl border hairline bg-card p-7 shadow-[var(--shadow-card)]">
               <div className="flex items-baseline justify-between">
-                <div className="font-display text-3xl font-semibold text-foreground">{priceLabel(p)}</div>
+                <div className="font-display text-3xl font-semibold text-foreground">
+                  {priceLabel(p)}
+                </div>
                 <div className="flex items-center gap-1 text-sm text-foreground/70">
                   {p.reviews > 0 && (
                     <>
-                      <Star className="h-4 w-4 fill-[color:var(--accent)] text-[color:var(--accent)]" /> {p.rating}
+                      <Star className="h-4 w-4 fill-[color:var(--accent)] text-[color:var(--accent)]" />{" "}
+                      {p.rating}
                     </>
                   )}
                 </div>
@@ -179,21 +234,32 @@ function PropertyPage() {
 
               <div className="mt-5 border-t hairline pt-4">
                 <div className="font-display text-lg text-foreground">Contact {p.hostName}</div>
-                <p className="text-xs text-muted-foreground">Send a secure enquiry — no phone number needed.</p>
+                <p className="text-xs text-muted-foreground">
+                  Send a secure enquiry, no phone number needed.
+                </p>
               </div>
               <EnquiryForm propertyId={p.id} ownerName={p.hostName} />
 
-
               <div className="mt-6 rounded-2xl bg-[color:var(--cream)] p-4 text-xs text-foreground/70">
-                You won't be charged yet. RentaGh holds payments in escrow until your stay or purchase is confirmed.
+                You won't be charged yet. RentaGh holds payments in escrow until your stay or
+                purchase is confirmed.
               </div>
             </div>
 
             <div className="mt-6 rounded-3xl border hairline bg-card p-6 text-sm">
               <div className="font-display text-lg text-foreground">Pay your way</div>
               <div className="mt-3 flex flex-wrap gap-2 text-xs">
-                {["MTN MoMo", "Telecel Cash", "AirtelTigo Money", "Visa", "Mastercard", "Bank transfer"].map((m) => (
-                  <span key={m} className="rounded-full bg-muted px-3 py-1.5 text-foreground/75">{m}</span>
+                {[
+                  "MTN MoMo",
+                  "Telecel Cash",
+                  "AirtelTigo Money",
+                  "Visa",
+                  "Mastercard",
+                  "Bank transfer",
+                ].map((m) => (
+                  <span key={m} className="rounded-full bg-muted px-3 py-1.5 text-foreground/75">
+                    {m}
+                  </span>
                 ))}
               </div>
             </div>
@@ -205,7 +271,15 @@ function PropertyPage() {
   );
 }
 
-function Spec({ icon: Icon, label, value }: { icon: typeof BedDouble; label: string; value: string | number }) {
+function Spec({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: typeof BedDouble;
+  label: string;
+  value: string | number;
+}) {
   return (
     <div className="rounded-2xl border hairline bg-card px-4 py-4">
       <Icon className="h-5 w-5 text-primary" />

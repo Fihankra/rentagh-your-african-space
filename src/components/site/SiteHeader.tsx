@@ -21,14 +21,15 @@ const nav: { to: string; params?: Record<string, string>; label: string }[] = [
   { to: "/browse/$category", params: { category: "farmlands" }, label: "Farm Lands" },
 ];
 
-/** Frosted, light-opacity pill used to keep header content legible when it's
- * floating over the hero photo instead of a solid bar. */
-const pill = "rounded-full bg-white/70 backdrop-blur-md shadow-[0_4px_18px_-8px_rgba(0,0,0,0.25)]";
+/** Very light, black-tinted glass pill used to keep header content legible
+ * when it's floating over the hero photo instead of a solid bar. */
+const pill =
+  "rounded-full bg-black/20 backdrop-blur-md border border-white/10 shadow-[0_4px_18px_-8px_rgba(0,0,0,0.35)]";
 
 export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const { user, isAdmin, signOut } = useAuth();
+  const { user, isAdmin, loading: authLoading, signOut } = useAuth();
 
   useEffect(() => {
     if (!overlay) return;
@@ -50,31 +51,51 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
       )}
     >
       <div className="container-x flex h-16 items-center justify-between gap-3 md:h-20">
-        <div className={cn(!solid && cn(pill, "px-3 py-1.5"))}>
-          <Logo />
-        </div>
+        <Logo floating={!solid} />
 
-        <nav className={cn("hidden items-center gap-6 md:flex", !solid && cn(pill, "px-6 py-2.5"))}>
+        <nav
+          className={cn(
+            "hidden items-center gap-8 md:flex",
+            !solid ? cn(pill, "px-8 py-3.5") : "gap-6",
+          )}
+        >
           {nav.map((n) => (
             <Link
               key={n.label}
               to={n.to as never}
               params={n.params as never}
-              className="text-sm font-medium text-foreground/75 transition-colors hover:text-primary"
-              activeProps={{ className: "text-primary" }}
+              className={cn(
+                "text-sm font-medium transition-colors",
+                solid ? "text-foreground/75 hover:text-primary" : "text-white/90 hover:text-white",
+              )}
+              activeProps={{ className: solid ? "text-primary" : "text-white" }}
             >
               {n.label}
             </Link>
           ))}
         </nav>
 
-        <div className={cn("hidden items-center gap-3 md:flex", !solid && cn(pill, "px-2 py-1.5"))}>
-          {user ? (
-            <div className="flex items-center gap-2">
-              <NotificationBell solid />
+        <div className="hidden items-center gap-3 md:flex">
+          {authLoading ? (
+            <div
+              className={cn(
+                "h-10 w-24 animate-pulse rounded-full",
+                solid ? "bg-muted" : "bg-white/20",
+              )}
+            />
+          ) : user ? (
+            <div className={cn("flex items-center gap-2", !solid && cn(pill, "px-3 py-2"))}>
+              <NotificationBell solid={solid} />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-muted">
+                  <button
+                    className={cn(
+                      "flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                      solid
+                        ? "text-foreground/80 hover:bg-muted"
+                        : "text-white/90 hover:bg-white/10",
+                    )}
+                  >
                     <User className="h-4 w-4" />
                     {isAdmin ? "Admin" : "Account"}
                     <ChevronDown className="h-3.5 w-3.5" />
@@ -121,8 +142,8 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           aria-label="Menu"
           onClick={() => setOpen((s) => !s)}
           className={cn(
-            "rounded-full p-2 text-foreground transition-colors md:hidden",
-            !solid && pill,
+            "rounded-full p-2.5 transition-colors md:hidden",
+            solid ? "text-foreground" : cn(pill, "text-white"),
           )}
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

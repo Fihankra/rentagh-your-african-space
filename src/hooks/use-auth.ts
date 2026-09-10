@@ -17,21 +17,27 @@ export function useAuth() {
     let mounted = true;
 
     async function refresh() {
-      const { data } = await supabase.auth.getUser();
+      // getSession() reads the already-verified local session (no network
+      // round trip); avoids the extra latency of getUser()'s server check on
+      // every page load. Server-side actions still re-verify independently.
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!mounted) return;
-      if (data.user) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("full_name, avatar_url")
-          .eq("user_id", data.user.id)
-          .single();
-        const { data: roles } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", data.user.id);
+      const authUser = session?.user;
+      if (authUser) {
+        const [{ data: profile }, { data: roles }] = await Promise.all([
+          supabase
+            .from("profiles")
+            .select("full_name, avatar_url")
+            .eq("user_id", authUser.id)
+            .single(),
+          supabase.from("user_roles").select("role").eq("user_id", authUser.id),
+        ]);
+        if (!mounted) return;
         setUser({
-          id: data.user.id,
-          email: data.user.email,
+          id: authUser.id,
+          email: authUser.email,
           fullName: profile?.full_name ?? undefined,
           avatarUrl: profile?.avatar_url ?? undefined,
         });

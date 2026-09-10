@@ -5,10 +5,14 @@ import { BrowseGrid } from "@/components/browse/BrowseGrid";
 import { categories, type CategorySlug } from "@/lib/categories";
 
 const categoryDescriptions: Record<CategorySlug, string> = {
-  hostels: "Verified student hostels near KNUST, Legon, UCC and other Ghanaian campuses — single, twin and shared rooms with clear yearly fees.",
-  homes: "Houses for rent across Accra, Kumasi, Tema and Takoradi — verified landlords and agents, with monthly rent shown upfront.",
-  lands: "Building lands for rent and for sale in Ghana — surveyed, litigation-free plots with indentures and site plans.",
-  farmlands: "Farm lands for rent and for sale in Ghana — arable acreage, cocoa farms and irrigated plots with road access.",
+  hostels:
+    "Verified student hostels near KNUST, Legon, UCC and other Ghanaian campuses. Single, twin and shared rooms with clear yearly fees.",
+  homes:
+    "Houses for rent across Accra, Kumasi, Tema and Takoradi. Verified landlords and agents, with monthly rent shown upfront.",
+  lands:
+    "Building lands for rent and for sale in Ghana. Surveyed, litigation-free plots with indentures and site plans.",
+  farmlands:
+    "Farm lands for rent and for sale in Ghana. Arable acreage, cocoa farms and irrigated plots with road access.",
 };
 
 export const Route = createFileRoute("/browse/$category")({
@@ -20,13 +24,14 @@ export const Route = createFileRoute("/browse/$category")({
   },
   head: ({ loaderData, params }) => {
     const label = loaderData?.cat.label ?? "Properties";
-    const blurb = categoryDescriptions[params.category as CategorySlug] ??
+    const blurb =
+      categoryDescriptions[params.category as CategorySlug] ??
       `Browse verified ${label.toLowerCase()} across Ghana on RentaGh.`;
     return {
       meta: [
-        { title: `${label} in Ghana — RentaGh` },
+        { title: `${label} in Ghana | RentaGh` },
         { name: "description", content: blurb },
-        { property: "og:title", content: `${label} in Ghana — RentaGh` },
+        { property: "og:title", content: `${label} in Ghana | RentaGh` },
         { property: "og:description", content: blurb },
         { property: "og:type", content: "website" },
         { property: "og:url", content: `/browse/${params.category}` },

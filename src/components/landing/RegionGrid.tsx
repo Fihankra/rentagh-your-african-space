@@ -29,7 +29,7 @@ export function RegionGrid() {
     <section className="mt-24">
       <SectionHeading
         title="Featured regions"
-        subtitle="From Accra's coast to the hills of the Ashanti — every region, one platform."
+        subtitle="From Accra's coast to the hills of the Ashanti. Every region, one platform."
       />
       <div className="container-x mt-10 grid auto-rows-[220px] grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
         {regions.map((r) => (

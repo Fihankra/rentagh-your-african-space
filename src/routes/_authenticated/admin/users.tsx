@@ -7,7 +7,7 @@ import { claimFirstAdmin } from "@/lib/properties.functions";
 export const Route = createFileRoute("/_authenticated/admin/users")({
   component: AdminUsers,
   head: () => ({
-    meta: [{ title: "Users — RentaGh Admin" }],
+    meta: [{ title: "Users | RentaGh Admin" }],
   }),
 });
 
@@ -45,7 +45,7 @@ function AdminUsers() {
                 {users.map((u) => (
                   <tr key={u.id} className="border-t hairline">
                     <td className="px-4 py-3">{u.email}</td>
-                    <td className="px-4 py-3">{u.fullName || "—"}</td>
+                    <td className="px-4 py-3">{u.fullName || "Not set"}</td>
                     <td className="px-4 py-3">{u.roles.length ? u.roles.join(", ") : "user"}</td>
                     <td className="px-4 py-3">
                       {u.roles.includes("admin") ? (

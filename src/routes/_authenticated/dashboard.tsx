@@ -9,9 +9,10 @@ import { claimFirstAdmin } from "@/lib/properties.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   ssr: false,
-  beforeLoad: async () => {
-    const { data } = await supabase.auth.getUser();
-    const user = data?.user;
+  beforeLoad: async ({ context }) => {
+    // Parent `_authenticated` layout already verified the session; reuse it
+    // instead of calling getUser() again.
+    const user = context.user;
     if (user) {
       const { data: isAdmin } = await supabase.rpc("has_role", {
         _user_id: user.id,
@@ -24,9 +25,9 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardPage,
   head: () => ({
     meta: [
-      { title: "Dashboard — RentaGh" },
+      { title: "Dashboard | RentaGh" },
       { name: "description", content: "Browse RentaGh and manage your account." },
-      { property: "og:title", content: "Dashboard — RentaGh" },
+      { property: "og:title", content: "Dashboard | RentaGh" },
       { property: "og:description", content: "Browse RentaGh and manage your account." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

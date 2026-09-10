@@ -72,14 +72,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "RentaGh — Every Space. One Platform." },
+      { title: "RentaGh: Every Space. One Platform." },
       {
         name: "description",
         content:
-          "Rent, buy and list student hostels, houses for rent, building lands and farm lands across Ghana on RentaGh — verified owners and escrow-protected payments.",
+          "Rent, buy and list student hostels, houses for rent, building lands and farm lands across Ghana on RentaGh. Verified owners and escrow-protected payments.",
       },
       { name: "author", content: "RentaGh" },
-      { property: "og:title", content: "RentaGh — Every Space. One Platform." },
+      { property: "og:title", content: "RentaGh: Every Space. One Platform." },
       {
         property: "og:description",
         content: "Verified student hostels, houses for rent, building and farm lands across Ghana.",

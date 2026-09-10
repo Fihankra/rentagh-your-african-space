@@ -6,7 +6,7 @@ import { adminListReviews, adminDeleteReview } from "@/lib/moderation.functions"
 export const Route = createFileRoute("/_authenticated/admin/reviews")({
   component: AdminReviews,
   head: () => ({
-    meta: [{ title: "Reviews — RentaGh Admin" }],
+    meta: [{ title: "Reviews | RentaGh Admin" }],
   }),
 });
 
