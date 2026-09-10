@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Facebook, Instagram, Twitter, Youtube, Globe } from "lucide-react";
-import logo from "@/assets/logo.png";
+import { Logo } from "@/components/site/Logo";
 
 const cols = [
   {
@@ -38,11 +38,10 @@ export function SiteFooter() {
       <div className="container-x py-16">
         <div className="grid gap-12 md:grid-cols-[1.4fr_repeat(3,1fr)]">
           <div>
-            <div className="flex items-center gap-2">
-              <img src={logo} alt="RentaGh" className="h-10 w-auto brightness-0 invert" />
-            </div>
+            <Logo dark />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/65">
-              Every Space. One Platform. Student hostels, houses for rent, building lands and farm lands — verified across Ghana.
+              Every Space. One Platform. Student hostels, houses for rent, building lands and farm
+              lands — verified across Ghana.
             </p>
             <form
               onSubmit={(e) => e.preventDefault()}
@@ -67,7 +66,10 @@ export function SiteFooter() {
               <ul className="mt-5 space-y-3">
                 {col.links.map((l) => (
                   <li key={`${col.heading}-${l.label}`}>
-                    <Link to={l.to} className="text-sm text-white/75 transition-colors hover:text-white">
+                    <Link
+                      to={l.to}
+                      className="text-sm text-white/75 transition-colors hover:text-white"
+                    >
                       {l.label}
                     </Link>
                   </li>

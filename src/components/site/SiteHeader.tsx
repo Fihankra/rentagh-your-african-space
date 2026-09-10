@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Menu, X, User, LogOut, LayoutDashboard, Shield, ChevronDown } from "lucide-react";
-import logo from "@/assets/logo.png";
+import { Logo } from "@/components/site/Logo";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
 import { NotificationBell } from "@/components/site/NotificationBell";
@@ -21,17 +21,22 @@ const nav: { to: string; params?: Record<string, string>; label: string }[] = [
   { to: "/browse/$category", params: { category: "farmlands" }, label: "Farm Lands" },
 ];
 
+/** Frosted, light-opacity pill used to keep header content legible when it's
+ * floating over the hero photo instead of a solid bar. */
+const pill = "rounded-full bg-white/70 backdrop-blur-md shadow-[0_4px_18px_-8px_rgba(0,0,0,0.25)]";
+
 export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { user, isAdmin, signOut } = useAuth();
 
   useEffect(() => {
+    if (!overlay) return;
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [overlay]);
 
   const solid = !overlay || scrolled;
 
@@ -44,48 +49,32 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           : "bg-transparent",
       )}
     >
-      <div className="container-x flex h-16 items-center justify-between gap-6 md:h-20">
-        <Link
-          to="/"
-          className={cn(
-            "flex items-center gap-2.5 rounded-full transition-colors",
-            solid ? "" : "bg-white/95 px-2.5 py-1 shadow-[0_4px_18px_-8px_rgba(0,0,0,0.35)]",
-          )}
-        >
-          <img src={logo} alt="RentaGh" className="h-8 w-auto md:h-10" />
-        </Link>
+      <div className="container-x flex h-16 items-center justify-between gap-3 md:h-20">
+        <div className={cn(!solid && cn(pill, "px-3 py-1.5"))}>
+          <Logo />
+        </div>
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className={cn("hidden items-center gap-6 md:flex", !solid && cn(pill, "px-6 py-2.5"))}>
           {nav.map((n) => (
             <Link
               key={n.label}
               to={n.to as never}
               params={n.params as never}
-              className={cn(
-                "text-sm font-medium transition-colors",
-                solid ? "text-foreground/75 hover:text-primary" : "text-white/85 hover:text-white",
-              )}
-              activeProps={{ className: solid ? "text-primary" : "text-white" }}
+              className="text-sm font-medium text-foreground/75 transition-colors hover:text-primary"
+              activeProps={{ className: "text-primary" }}
             >
               {n.label}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className={cn("hidden items-center gap-3 md:flex", !solid && cn(pill, "px-2 py-1.5"))}>
           {user ? (
             <div className="flex items-center gap-2">
-              <NotificationBell solid={solid} />
+              <NotificationBell solid />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button
-                    className={cn(
-                      "flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors",
-                      solid
-                        ? "text-foreground/80 hover:bg-muted"
-                        : "text-white/90 hover:bg-white/10",
-                    )}
-                  >
+                  <button className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-muted">
                     <User className="h-4 w-4" />
                     {isAdmin ? "Admin" : "Account"}
                     <ChevronDown className="h-3.5 w-3.5" />
@@ -132,8 +121,8 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           aria-label="Menu"
           onClick={() => setOpen((s) => !s)}
           className={cn(
-            "md:hidden rounded-full p-2 transition-colors",
-            solid ? "text-foreground" : "text-white",
+            "rounded-full p-2 text-foreground transition-colors md:hidden",
+            !solid && pill,
           )}
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
