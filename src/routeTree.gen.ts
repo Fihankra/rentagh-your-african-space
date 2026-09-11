@@ -23,6 +23,8 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as BrowseCategoryRouteImport } from './routes/browse.$category'
 import { Route as PropertyIdRouteImport } from './routes/property.$id'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as AuthenticatedAdminCommissionsRouteImport } from './routes/_authenticated/admin/commissions'
+import { Route as AuthenticatedAdminCustomersRouteImport } from './routes/_authenticated/admin/customers'
 import { Route as AuthenticatedAdminListingsRouteImport } from './routes/_authenticated/admin/listings'
 import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authenticated/admin/messages'
 import { Route as AuthenticatedAdminOwnersRouteImport } from './routes/_authenticated/admin/owners'
@@ -104,6 +106,18 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
+const AuthenticatedAdminCommissionsRoute =
+  AuthenticatedAdminCommissionsRouteImport.update({
+    id: '/commissions',
+    path: '/commissions',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminCustomersRoute =
+  AuthenticatedAdminCustomersRouteImport.update({
+    id: '/customers',
+    path: '/customers',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminListingsRoute =
   AuthenticatedAdminListingsRouteImport.update({
     id: '/listings',
@@ -181,6 +195,8 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/browse/$category': typeof BrowseCategoryRoute
   '/property/$id': typeof PropertyIdRoute
+  '/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
+  '/admin/customers': typeof AuthenticatedAdminCustomersRoute
   '/admin/listings': typeof AuthenticatedAdminListingsRoute
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/admin/owners': typeof AuthenticatedAdminOwnersRoute
@@ -206,6 +222,8 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/browse/$category': typeof BrowseCategoryRoute
   '/property/$id': typeof PropertyIdRoute
+  '/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
+  '/admin/customers': typeof AuthenticatedAdminCustomersRoute
   '/admin/listings': typeof AuthenticatedAdminListingsRoute
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/admin/owners': typeof AuthenticatedAdminOwnersRoute
@@ -234,6 +252,8 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/browse/$category': typeof BrowseCategoryRoute
   '/property/$id': typeof PropertyIdRoute
+  '/_authenticated/admin/commissions': typeof AuthenticatedAdminCommissionsRoute
+  '/_authenticated/admin/customers': typeof AuthenticatedAdminCustomersRoute
   '/_authenticated/admin/listings': typeof AuthenticatedAdminListingsRoute
   '/_authenticated/admin/messages': typeof AuthenticatedAdminMessagesRoute
   '/_authenticated/admin/owners': typeof AuthenticatedAdminOwnersRoute
@@ -262,6 +282,8 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/browse/$category'
     | '/property/$id'
+    | '/admin/commissions'
+    | '/admin/customers'
     | '/admin/listings'
     | '/admin/messages'
     | '/admin/owners'
@@ -287,6 +309,8 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/browse/$category'
     | '/property/$id'
+    | '/admin/commissions'
+    | '/admin/customers'
     | '/admin/listings'
     | '/admin/messages'
     | '/admin/owners'
@@ -314,6 +338,8 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/browse/$category'
     | '/property/$id'
+    | '/_authenticated/admin/commissions'
+    | '/_authenticated/admin/customers'
     | '/_authenticated/admin/listings'
     | '/_authenticated/admin/messages'
     | '/_authenticated/admin/owners'
@@ -441,6 +467,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/commissions': {
+      id: '/_authenticated/admin/commissions'
+      path: '/commissions'
+      fullPath: '/admin/commissions'
+      preLoaderRoute: typeof AuthenticatedAdminCommissionsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/customers': {
+      id: '/_authenticated/admin/customers'
+      path: '/customers'
+      fullPath: '/admin/customers'
+      preLoaderRoute: typeof AuthenticatedAdminCustomersRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/listings': {
       id: '/_authenticated/admin/listings'
       path: '/listings'
@@ -522,6 +562,8 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminCommissionsRoute: typeof AuthenticatedAdminCommissionsRoute
+  AuthenticatedAdminCustomersRoute: typeof AuthenticatedAdminCustomersRoute
   AuthenticatedAdminListingsRoute: typeof AuthenticatedAdminListingsRoute
   AuthenticatedAdminMessagesRoute: typeof AuthenticatedAdminMessagesRoute
   AuthenticatedAdminOwnersRoute: typeof AuthenticatedAdminOwnersRoute
@@ -536,6 +578,8 @@ interface AuthenticatedAdminRouteRouteChildren {
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
+    AuthenticatedAdminCommissionsRoute: AuthenticatedAdminCommissionsRoute,
+    AuthenticatedAdminCustomersRoute: AuthenticatedAdminCustomersRoute,
     AuthenticatedAdminListingsRoute: AuthenticatedAdminListingsRoute,
     AuthenticatedAdminMessagesRoute: AuthenticatedAdminMessagesRoute,
     AuthenticatedAdminOwnersRoute: AuthenticatedAdminOwnersRoute,
