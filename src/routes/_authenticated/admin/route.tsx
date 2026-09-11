@@ -2,8 +2,11 @@ import { createFileRoute, Link, Outlet, redirect, useLocation } from "@tanstack/
 import {
   LayoutGrid,
   Building2,
+  UserSquare2,
+  Contact,
   Key,
   Banknote,
+  Wallet,
   MessageSquare,
   Star,
   Users,
@@ -46,9 +49,12 @@ export const Route = createFileRoute("/_authenticated/admin")({
 
 const navItems: { to: string; label: string; icon: typeof LayoutGrid; exact?: boolean }[] = [
   { to: "/admin", label: "Overview", icon: LayoutGrid, exact: true },
-  { to: "/admin/listings", label: "Listings", icon: Building2 },
-  { to: "/admin/rents", label: "Rents", icon: Key },
-  { to: "/admin/sales", label: "Sales", icon: Banknote },
+  { to: "/admin/listings", label: "Properties", icon: Building2 },
+  { to: "/admin/owners", label: "Property Owners", icon: UserSquare2 },
+  { to: "/admin/customers", label: "Tenants & Buyers", icon: Contact },
+  { to: "/admin/rents", label: "Rent Agreements", icon: Key },
+  { to: "/admin/sales", label: "Sale Transactions", icon: Banknote },
+  { to: "/admin/commissions", label: "Commissions", icon: Wallet },
   { to: "/admin/messages", label: "Messages", icon: MessageSquare },
   { to: "/admin/reviews", label: "Reviews", icon: Star },
   { to: "/admin/users", label: "Users", icon: Users },

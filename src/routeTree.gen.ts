@@ -25,6 +25,7 @@ import { Route as PropertyIdRouteImport } from './routes/property.$id'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedAdminListingsRouteImport } from './routes/_authenticated/admin/listings'
 import { Route as AuthenticatedAdminMessagesRouteImport } from './routes/_authenticated/admin/messages'
+import { Route as AuthenticatedAdminOwnersRouteImport } from './routes/_authenticated/admin/owners'
 import { Route as AuthenticatedAdminProfileRouteImport } from './routes/_authenticated/admin/profile'
 import { Route as AuthenticatedAdminRentsRouteImport } from './routes/_authenticated/admin/rents'
 import { Route as AuthenticatedAdminReviewsRouteImport } from './routes/_authenticated/admin/reviews'
@@ -115,6 +116,12 @@ const AuthenticatedAdminMessagesRoute =
     path: '/messages',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminOwnersRoute =
+  AuthenticatedAdminOwnersRouteImport.update({
+    id: '/owners',
+    path: '/owners',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminProfileRoute =
   AuthenticatedAdminProfileRouteImport.update({
     id: '/profile',
@@ -176,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/property/$id': typeof PropertyIdRoute
   '/admin/listings': typeof AuthenticatedAdminListingsRoute
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
+  '/admin/owners': typeof AuthenticatedAdminOwnersRoute
   '/admin/profile': typeof AuthenticatedAdminProfileRoute
   '/admin/rents': typeof AuthenticatedAdminRentsRoute
   '/admin/reviews': typeof AuthenticatedAdminReviewsRoute
@@ -200,6 +208,7 @@ export interface FileRoutesByTo {
   '/property/$id': typeof PropertyIdRoute
   '/admin/listings': typeof AuthenticatedAdminListingsRoute
   '/admin/messages': typeof AuthenticatedAdminMessagesRoute
+  '/admin/owners': typeof AuthenticatedAdminOwnersRoute
   '/admin/profile': typeof AuthenticatedAdminProfileRoute
   '/admin/rents': typeof AuthenticatedAdminRentsRoute
   '/admin/reviews': typeof AuthenticatedAdminReviewsRoute
@@ -227,6 +236,7 @@ export interface FileRoutesById {
   '/property/$id': typeof PropertyIdRoute
   '/_authenticated/admin/listings': typeof AuthenticatedAdminListingsRoute
   '/_authenticated/admin/messages': typeof AuthenticatedAdminMessagesRoute
+  '/_authenticated/admin/owners': typeof AuthenticatedAdminOwnersRoute
   '/_authenticated/admin/profile': typeof AuthenticatedAdminProfileRoute
   '/_authenticated/admin/rents': typeof AuthenticatedAdminRentsRoute
   '/_authenticated/admin/reviews': typeof AuthenticatedAdminReviewsRoute
@@ -254,6 +264,7 @@ export interface FileRouteTypes {
     | '/property/$id'
     | '/admin/listings'
     | '/admin/messages'
+    | '/admin/owners'
     | '/admin/profile'
     | '/admin/rents'
     | '/admin/reviews'
@@ -278,6 +289,7 @@ export interface FileRouteTypes {
     | '/property/$id'
     | '/admin/listings'
     | '/admin/messages'
+    | '/admin/owners'
     | '/admin/profile'
     | '/admin/rents'
     | '/admin/reviews'
@@ -304,6 +316,7 @@ export interface FileRouteTypes {
     | '/property/$id'
     | '/_authenticated/admin/listings'
     | '/_authenticated/admin/messages'
+    | '/_authenticated/admin/owners'
     | '/_authenticated/admin/profile'
     | '/_authenticated/admin/rents'
     | '/_authenticated/admin/reviews'
@@ -442,6 +455,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMessagesRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/owners': {
+      id: '/_authenticated/admin/owners'
+      path: '/owners'
+      fullPath: '/admin/owners'
+      preLoaderRoute: typeof AuthenticatedAdminOwnersRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/profile': {
       id: '/_authenticated/admin/profile'
       path: '/profile'
@@ -504,6 +524,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminListingsRoute: typeof AuthenticatedAdminListingsRoute
   AuthenticatedAdminMessagesRoute: typeof AuthenticatedAdminMessagesRoute
+  AuthenticatedAdminOwnersRoute: typeof AuthenticatedAdminOwnersRoute
   AuthenticatedAdminProfileRoute: typeof AuthenticatedAdminProfileRoute
   AuthenticatedAdminRentsRoute: typeof AuthenticatedAdminRentsRoute
   AuthenticatedAdminReviewsRoute: typeof AuthenticatedAdminReviewsRoute
@@ -517,6 +538,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
   {
     AuthenticatedAdminListingsRoute: AuthenticatedAdminListingsRoute,
     AuthenticatedAdminMessagesRoute: AuthenticatedAdminMessagesRoute,
+    AuthenticatedAdminOwnersRoute: AuthenticatedAdminOwnersRoute,
     AuthenticatedAdminProfileRoute: AuthenticatedAdminProfileRoute,
     AuthenticatedAdminRentsRoute: AuthenticatedAdminRentsRoute,
     AuthenticatedAdminReviewsRoute: AuthenticatedAdminReviewsRoute,
