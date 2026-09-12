@@ -193,9 +193,9 @@ function AdminCustomers() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {[c.phone, c.email].filter(Boolean).join(" · ") || "—"}
+                    {[c.phone, c.email].filter(Boolean).join(" · ") || "N/A"}
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground">{c.idNumber || "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{c.idNumber || "N/A"}</td>
                   <td className="px-4 py-3">
                     <button
                       onClick={() => remove.mutate({ data: { id: c.id } })}

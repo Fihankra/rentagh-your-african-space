@@ -78,8 +78,8 @@ function AdminSales() {
             Sale Transactions
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            RentaGh buys the property outright, holds it as inventory, then resells it to a
-            buyer at a profit.
+            RentaGh buys the property outright, holds it as inventory, then resells it to a buyer at
+            a profit.
           </p>
         </div>
         <button
@@ -190,24 +190,26 @@ function AdminSales() {
               {(sales ?? []).map((s) => (
                 <tr key={s.id} className="border-t hairline">
                   <td className="px-4 py-3 font-medium text-foreground">{s.propertyTitle}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{s.ownerName ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{s.ownerName ?? "N/A"}</td>
                   <td className="px-4 py-3 text-foreground">
                     GHS {s.acquisitionCost.toLocaleString()}
                   </td>
                   <td className="px-4 py-3 text-foreground">
-                    {s.salePrice != null ? `GHS ${s.salePrice.toLocaleString()}` : "—"}
+                    {s.salePrice != null ? `GHS ${s.salePrice.toLocaleString()}` : "N/A"}
                   </td>
                   <td className="px-4 py-3">
                     {s.profit != null ? (
                       <span
                         className={
-                          s.profit >= 0 ? "font-semibold text-primary" : "font-semibold text-red-700"
+                          s.profit >= 0
+                            ? "font-semibold text-primary"
+                            : "font-semibold text-red-700"
                         }
                       >
                         GHS {s.profit.toLocaleString()}
                       </span>
                     ) : (
-                      "—"
+                      "N/A"
                     )}
                   </td>
                   <td className="px-4 py-3">
@@ -244,9 +246,7 @@ function AdminSales() {
                           <select
                             required
                             value={sellForm.buyerId}
-                            onChange={(e) =>
-                              setSellForm({ ...sellForm, buyerId: e.target.value })
-                            }
+                            onChange={(e) => setSellForm({ ...sellForm, buyerId: e.target.value })}
                             className="input w-32 py-1.5 text-xs"
                           >
                             <option value="">Buyer…</option>
@@ -272,9 +272,7 @@ function AdminSales() {
                             required
                             type="date"
                             value={sellForm.saleDate}
-                            onChange={(e) =>
-                              setSellForm({ ...sellForm, saleDate: e.target.value })
-                            }
+                            onChange={(e) => setSellForm({ ...sellForm, saleDate: e.target.value })}
                             className="input w-32 py-1.5 text-xs"
                           />
                           <button

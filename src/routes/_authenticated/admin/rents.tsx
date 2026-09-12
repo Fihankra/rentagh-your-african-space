@@ -298,15 +298,13 @@ function AdminRents() {
             <select
               required
               value={paymentForm.rentAgreementId}
-              onChange={(e) =>
-                setPaymentForm({ ...paymentForm, rentAgreementId: e.target.value })
-              }
+              onChange={(e) => setPaymentForm({ ...paymentForm, rentAgreementId: e.target.value })}
               className="input"
             >
               <option value="">Select an agreement…</option>
               {(agreements ?? []).map((a) => (
                 <option key={a.id} value={a.id}>
-                  {a.propertyTitle} — {a.tenantName}
+                  {a.propertyTitle} ({a.tenantName})
                 </option>
               ))}
             </select>
@@ -347,9 +345,7 @@ function AdminRents() {
               min={0}
               step="0.01"
               value={paymentForm.commissionAmount}
-              onChange={(e) =>
-                setPaymentForm({ ...paymentForm, commissionAmount: e.target.value })
-              }
+              onChange={(e) => setPaymentForm({ ...paymentForm, commissionAmount: e.target.value })}
               className="input"
             />
           </Field>
@@ -386,7 +382,7 @@ function AdminRents() {
                 <tr key={a.id} className="border-t hairline">
                   <td className="px-4 py-3 font-medium text-foreground">{a.propertyTitle}</td>
                   <td className="px-4 py-3 text-muted-foreground">{a.tenantName}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{a.ownerName ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{a.ownerName ?? "N/A"}</td>
                   <td className="px-4 py-3 text-foreground">
                     GHS {a.rentAmount.toLocaleString()} / {a.pricePeriod}
                   </td>
@@ -525,7 +521,15 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-function StatCard({ label, value, icon: Icon }: { label: string; value: number; icon: typeof Key }) {
+function StatCard({
+  label,
+  value,
+  icon: Icon,
+}: {
+  label: string;
+  value: number;
+  icon: typeof Key;
+}) {
   return (
     <div className="flex items-center gap-4 rounded-[20px] border hairline bg-card p-5">
       <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">

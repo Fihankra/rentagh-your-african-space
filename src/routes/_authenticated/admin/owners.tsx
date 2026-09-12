@@ -48,7 +48,7 @@ function AdminOwners() {
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Landlords and sellers RentaGh sources properties from. They never deal with tenants or
-            buyers directly — RentaGh is the go-between.
+            buyers directly. RentaGh is the go-between.
           </p>
         </div>
         <button
@@ -147,9 +147,9 @@ function AdminOwners() {
                 <tr key={o.id} className="border-t hairline">
                   <td className="px-4 py-3 font-medium text-foreground">{o.fullName}</td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {[o.phone, o.email].filter(Boolean).join(" · ") || "—"}
+                    {[o.phone, o.email].filter(Boolean).join(" · ") || "N/A"}
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground">{o.idNumber || "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{o.idNumber || "N/A"}</td>
                   <td className="px-4 py-3">
                     <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
                       {o.propertyCount}

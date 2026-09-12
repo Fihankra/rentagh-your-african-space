@@ -22,8 +22,8 @@ function AdminCommissions() {
         Commissions
       </h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        What RentaGh actually earns — rent commission collected each period, plus profit from
-        resold properties.
+        What RentaGh actually earns: rent commission collected each period, plus profit from resold
+        properties.
       </p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
@@ -60,8 +60,8 @@ function AdminCommissions() {
                     </span>
                   </td>
                   <td className="px-4 py-3 font-medium text-foreground">{e.label}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{e.subLabel ?? "—"}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{e.date ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{e.subLabel ?? "N/A"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{e.date ?? "N/A"}</td>
                   <td className="px-4 py-3 font-semibold text-foreground">
                     {e.amount.toLocaleString()}
                   </td>
@@ -70,8 +70,7 @@ function AdminCommissions() {
               {!isLoading && (data?.entries ?? []).length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-4 py-10 text-center text-muted-foreground">
-                    No revenue recorded yet — collect a rent payment or close a sale to see it
-                    here.
+                    No revenue recorded yet. Collect a rent payment or close a sale to see it here.
                   </td>
                 </tr>
               )}
@@ -108,9 +107,7 @@ function StatCard({
         <Icon className="h-5 w-5" />
       </span>
       <div>
-        <div className="font-display text-2xl font-semibold">
-          GHS {value.toLocaleString()}
-        </div>
+        <div className="font-display text-2xl font-semibold">GHS {value.toLocaleString()}</div>
         <div className={`text-xs ${highlight ? "text-white/70" : "text-muted-foreground"}`}>
           {label}
         </div>

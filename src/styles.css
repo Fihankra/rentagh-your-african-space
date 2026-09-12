@@ -187,7 +187,8 @@
     border-color: color-mix(in oklab, var(--charcoal) 12%, transparent);
   }
   .input {
-    @apply w-full rounded-xl border hairline bg-background px-3.5 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-[color:var(--ring)];
+    @apply w-full rounded-xl border bg-background px-3.5 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-[color:var(--ring)];
+    border-color: color-mix(in oklab, var(--charcoal) 12%, transparent);
   }
 }
 
